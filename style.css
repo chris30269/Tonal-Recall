@@ -1,0 +1,9 @@
+#ballcircle{
+	transform: rotate(30deg);
+	transform-origin: 50% 50%;
+	transition: transform 100ms;
+}
+
+#viz{
+	width: 25vw;
+}

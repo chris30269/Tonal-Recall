@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tonal Recall</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script type="text/javascript" src="PitchDetect/pitchdetector.js"></script>
+	<script type="text/javascript" src="js.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="viz">
+		<?xml version="1.0" encoding="utf-8"?>
+		<!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+		<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+		<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 viewBox="0 0 560 560" enable-background="new 0 0 560 560" xml:space="preserve">
+		<path fill="#94FFFF" d="M280,281.6l0-109.2c30.5,0,58,12.7,77.6,33.1L280,281.6z"/>
+		<g id="XMLID_6_">
+			<g>
+				<path fill="none" d="M280,490v70c-88.9,0-168-41.4-219.3-105.9l54.4-44.1c14.6,18.5,32.2,34.4,52.1,47.1c-0.4,1.9-0.7,3.9-0.7,5.9
+					c0,14.9,12.1,26.9,27,26.9c8.6,0,16.3-4,21.2-10.4C235.2,486.4,257.2,490,280,490z"/>
+				<path fill="none" d="M280,387.6V476c-20.9,0-41-3.3-59.8-9.3c0.2-1.2,0.2-2.4,0.2-3.6c0-14.9-12.1-27-27-27
+					c-7.8,0-14.8,3.3-19.8,8.6c-18.2-11.8-34.4-26.5-47.7-43.5l68.7-55.6C214.3,371.2,245.2,387.6,280,387.6z"/>
+				<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M553.2,218.4c4.5,19.8,6.8,40.5,6.8,61.6
+					c0,65.8-22.7,126.3-60.7,174L445,410c17.5-22.2,30.6-48,38.1-76.2c13.9-1.1,24.8-12.7,24.8-26.9c0-11.7-7.4-21.6-17.9-25.4
+					c0-0.5,0-1.1,0-1.6c0-16.2-1.8-32-5.3-47.1L553.2,218.4L553.2,218.4z"/>
+				<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M476,280c0,0.1,0,0.3,0,0.4c-12.6,2.3-22.1,13.3-22.1,26.5
+					c0,10.7,6.2,20,15.3,24.3c-7,25.8-19.1,49.5-35.2,69.9l-68.7-55.6c14-18.1,22.3-40.9,22.3-65.6c0-8.9-1.1-17.5-3.1-25.8l86.5-18.4
+					C474.3,250,476,264.8,476,280z"/>
+				<path fill="#00FFFF" stroke="#00FFD5" stroke-miterlimit="10" d="M405.7,29.7L405.7,29.7l-31.8,62.4
+					c-20.7-10.4-43.5-17.5-67.5-20.5C303.9,59.3,293,50,280,50c-13,0-23.9,9.3-26.5,21.6c-24,3-46.7,10.1-67.5,20.5l-31.8-62.4
+					C192.1,10.7,234.8,0,280,0S367.9,10.7,405.7,29.7z"/>
+				<path fill="#00FFFF" stroke="#00FFD5" stroke-miterlimit="10" d="M367.6,104.6l-40.1,78.7c-14.3-7-30.4-11-47.4-11
+					c-17,0-33.1,3.9-47.4,11l-40.1-78.7c19.1-9.6,40-16.1,62-18.9c3.6,10.7,13.7,18.3,25.5,18.3c11.9,0,21.9-7.7,25.5-18.3
+					C327.6,88.5,348.5,95,367.6,104.6z"/>
+			</g>
+			<g>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="484.7" y1="232.9" x2="553.2" y2="218.4"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="384.5" y1="254.2" x2="471" y2="235.8"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="445" y1="410" x2="499.3" y2="454.1"/>
+				<polyline fill="none" stroke="#3F3F3F" stroke-miterlimit="10" points="365.4,345.6 365.4,345.6 434.1,401.2 		"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="280" y1="490" x2="280" y2="560"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="280" y1="387.6" x2="280" y2="476"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="115.1" y1="410" x2="60.7" y2="454.1"/>
+				<polyline fill="none" stroke="#3F3F3F" stroke-miterlimit="10" points="194.6,345.6 194.6,345.6 125.9,401.2 		"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="75.3" y1="232.9" x2="6.8" y2="218.4"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="175.5" y1="254.2" x2="89" y2="235.9"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M327.4,183.4c28.2,13.8,49.4,39.7,57.1,70.9
+					c2,8.3,3.1,16.9,3.1,25.8c0,24.7-8.3,47.4-22.3,65.6c-19.7,25.6-50.6,42.1-85.4,42.1s-65.7-16.5-85.4-42.1
+					c-14-18.1-22.3-40.9-22.3-65.6c0-8.9,1.1-17.5,3.1-25.8c7.7-31.2,28.9-57,57.1-70.9"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M232.6,183.3c14.3-7,30.4-11,47.4-11c17,0,33.1,3.9,47.4,11"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="373.9" y1="92.1" x2="405.7" y2="29.8"/>
+				<polyline fill="none" stroke="#3F3F3F" stroke-miterlimit="10" points="327.4,183.4 327.4,183.3 367.6,104.6 		"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M553.2,218.4c4.5,19.8,6.8,40.5,6.8,61.6
+					c0,65.8-22.7,126.3-60.7,174C448.1,518.6,368.9,560,280,560S112,518.6,60.7,454.1C22.7,406.3,0,345.8,0,280
+					c0-21.2,2.3-41.8,6.8-61.6C25.4,135.7,80.5,66.9,154.3,29.8C192.1,10.7,234.8,0,280,0s87.9,10.7,125.7,29.7
+					C479.5,66.9,534.6,135.7,553.2,218.4z"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M60.7,454.1"/>
+				<line fill="none" stroke="#3F3F3F" stroke-miterlimit="10" x1="186.1" y1="92.1" x2="154.3" y2="29.8"/>
+				<polyline fill="none" stroke="#3F3F3F" stroke-miterlimit="10" points="232.6,183.4 232.6,183.3 192.4,104.6 		"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M173.7,444.7c-18.2-11.8-34.4-26.5-47.7-43.5
+					C99.7,367.8,84,325.7,84,280c0-15.2,1.7-30,5-44.2c13.2-57.6,51.9-105.4,103.4-131.3c19.1-9.6,40-16.1,62-18.9"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M469.2,331.3c-7,25.8-19.1,49.5-35.2,69.9
+					C398.2,446.7,342.5,476,280,476c-20.9,0-41-3.3-59.8-9.3"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M305.5,85.7c22,2.9,42.9,9.4,62,18.9
+					c51.6,25.8,90.2,73.7,103.5,131.2c3.3,14.2,5,29,5,44.2c0,0.1,0,0.3,0,0.4"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M490,281.6c0-0.5,0-1.1,0-1.6c0-16.2-1.8-32-5.3-47.1
+					c-14.1-61.7-55.5-113.1-110.8-140.8c-20.7-10.4-43.5-17.5-67.5-20.5"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M214.7,479.6c20.6,6.7,42.5,10.4,65.3,10.4
+					c66.9,0,126.5-31.3,165-80c17.5-22.2,30.6-48,38.1-76.2"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M253.6,71.6c-24,3-46.7,10.1-67.5,20.5
+					c-55.3,27.7-96.6,79-110.8,140.8C71.8,248.1,70,263.8,70,280c0,49.1,16.8,94.2,45.1,130c14.6,18.5,32.2,34.4,52.1,47.1"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M306.5,71.6C303.9,59.3,293,50,280,50c-13,0-23.9,9.3-26.5,21.6"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M254.5,85.7c3.6,10.7,13.7,18.3,25.5,18.3
+					c11.9,0,21.9-7.7,25.5-18.3"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M167.1,457.1c-0.4,1.9-0.7,3.9-0.7,5.9c0,14.9,12.1,26.9,27,26.9
+					c8.6,0,16.3-4,21.2-10.4"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M220.2,466.7c0.2-1.2,0.2-2.4,0.2-3.6c0-14.9-12.1-27-27-27
+					c-7.8,0-14.8,3.3-19.8,8.6"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M483,333.8c13.9-1.1,24.8-12.7,24.8-26.9c0-11.7-7.4-21.6-17.9-25.4
+					"/>
+				<path fill="none" stroke="#3F3F3F" stroke-miterlimit="10" d="M476,280.4c-12.6,2.3-22.1,13.3-22.1,26.5c0,10.7,6.2,20,15.3,24.3"
+					/>
+			</g>
+		</g>
+		<g id="XMLID_2_">
+			<g>
+				<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M280,490v70c-88.9,0-168-41.4-219.3-105.9l54.4-44.1
+					c14.6,18.5,32.2,34.4,52.1,47.1c-0.4,1.9-0.7,3.9-0.7,5.9c0,14.9,12.1,26.9,27,26.9c8.6,0,16.3-4,21.2-10.4
+					C235.2,486.4,257.2,490,280,490z"/>
+				<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M280,387.6V476c-20.9,0-41-3.3-59.8-9.3c0.2-1.2,0.2-2.4,0.2-3.6
+					c0-14.9-12.1-27-27-27c-7.8,0-14.8,3.3-19.8,8.6c-18.2-11.8-34.4-26.5-47.7-43.5l68.7-55.6C214.3,371.2,245.2,387.6,280,387.6z"/>
+				<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M553.2,218.4c4.5,19.8,6.8,40.5,6.8,61.6
+					c0,65.8-22.7,126.3-60.7,174L445,410c17.5-22.2,30.6-48,38.1-76.2c13.9-1.1,24.8-12.7,24.8-26.9c0-11.7-7.4-21.6-17.9-25.4
+					c0-0.5,0-1.1,0-1.6c0-16.2-1.8-32-5.3-47.1L553.2,218.4L553.2,218.4z"/>
+				<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M476,280c0,0.1,0,0.3,0,0.4c-12.6,2.3-22.1,13.3-22.1,26.5
+					c0,10.7,6.2,20,15.3,24.3c-7,25.8-19.1,49.5-35.2,69.9l-68.7-55.6c14-18.1,22.3-40.9,22.3-65.6c0-8.9-1.1-17.5-3.1-25.8l86.5-18.4
+					C474.3,250,476,264.8,476,280z"/>
+			</g>
+			<line fill="none" stroke="#00FFD5" stroke-miterlimit="10" x1="484.7" y1="232.9" x2="553.2" y2="218.4"/>
+			<line fill="none" stroke="#00FFD5" stroke-miterlimit="10" x1="384.5" y1="254.2" x2="471" y2="235.8"/>
+			<line fill="none" stroke="#00FFD5" stroke-miterlimit="10" x1="445" y1="410" x2="499.3" y2="454.1"/>
+			<polyline fill="none" stroke="#00FFD5" stroke-miterlimit="10" points="365.4,345.6 365.4,345.6 434.1,401.2 	"/>
+			<line fill="none" stroke="#00FFAA" stroke-miterlimit="10" x1="280" y1="490" x2="280" y2="560"/>
+			<line fill="none" stroke="#00FFAA" stroke-miterlimit="10" x1="280" y1="387.6" x2="280" y2="476"/>
+			<line fill="none" stroke="#00FFAA" stroke-miterlimit="10" x1="115.1" y1="410" x2="60.7" y2="454.1"/>
+			<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M280,560c-88.9,0-168-41.4-219.3-105.9"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M553.2,218.4c4.5,19.8,6.8,40.5,6.8,61.6c0,65.8-22.7,126.3-60.7,174
+				"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M60.7,454.1"/>
+			<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M280,476c-20.9,0-41-3.3-59.8-9.3"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M469.2,331.3c-7,25.8-19.1,49.5-35.2,69.9"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M471,235.8c3.3,14.2,5,29,5,44.2c0,0.1,0,0.3,0,0.4"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M445,410c17.5-22.2,30.6-48,38.1-76.2"/>
+			<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M214.7,479.6c20.6,6.7,42.5,10.4,65.3,10.4"/>
+			<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M167.1,457.1c-0.4,1.9-0.7,3.9-0.7,5.9c0,14.9,12.1,26.9,27,26.9
+				c8.6,0,16.3-4,21.2-10.4"/>
+			<path fill="none" stroke="#00FFAA" stroke-miterlimit="10" d="M220.2,466.7c0.2-1.2,0.2-2.4,0.2-3.6c0-14.9-12.1-27-27-27
+				c-7.8,0-14.8,3.3-19.8,8.6"/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M483,333.8c13.9-1.1,24.8-12.7,24.8-26.9c0-11.7-7.4-21.6-17.9-25.4"
+				/>
+			<path fill="none" stroke="#00FFD5" stroke-miterlimit="10" d="M476,280.4c-12.6,2.3-22.1,13.3-22.1,26.5c0,10.7,6.2,20,15.3,24.3"
+				/>
+		</g>
+		<text transform="matrix(1 0 0 1 266.4004 150.8867)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">1</text>
+		<text transform="matrix(1 0 0 1 387.6367 196.2114)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">2</text>
+		<text transform="matrix(1 0 0 1 405.6982 324.3672)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">3</text>
+		<text transform="matrix(1 0 0 1 338.4941 428.3018)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">4</text>
+		<text transform="matrix(1 0 0 1 205.0151 420.4854)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">5</text>
+		<text transform="matrix(1 0 0 1 127.666 324.3682)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">6</text>
+		<text transform="matrix(1 0 0 1 149.5464 196.2114)" fill="#41423F" font-family="'HelveticaNeue-Light'" font-size="35.9096">7</text>
+		<g id="ballcircle">
+			<circle fill="none" cx="280" cy="280" r="203"/>
+			<circle id="ball" fill="#00FFFF" stroke="#231F20" stroke-miterlimit="10" cx="280" cy="77" r="18.7"/>
+		</g>
+		</svg>
+	</div>
+
+
+	<p>Tonic: <span id="tonic">A = 440Hz</span></p>
+	<p>Singing: <span id="hz"></span>Hz</p>
+	<p>Singing: <span id="cents"></span> cents from tonic</p>
+
+</body>
+</html>
