@@ -4,6 +4,9 @@ var audioContext = new AudioContext();
 var tonic = 440;
 var cents = 0;
 
+var temperament = "equal";
+var smoother = [0,0,0,0,0,0,0,0,0,0];
+
 $(function(){
 
 	detector = new PitchDetector({
@@ -41,8 +44,24 @@ $(function(){
 	        	//var pitch = constrainPitch();
 	        	$("#hz").html(stats.frequency);
 	        	var fraction = Math.log(stats.frequency/tonic)/Math.log(2);
-	        	if (fraction > 1) fraction = fraction%1;
-	        	$("#ballcircle").css("transform", "rotate("+fraction*360.0+"deg)");
+	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
+	        	//if (fraction > 1) fraction = fraction%1;
+	        	// var average = 0;
+	        	// for (var i = smoother.length - 1; i >= 0; i--) {
+	        	// 	average += smoother[i];
+	        	// };
+	        	// average = average / (smoother.length*1.0);
+	        	var smoothed = mode(smoother);
+	        	console.log(smoothed);
+	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
+	        		//not an error
+	        		for (var i = smoother.length - 1; i >= 1; i--) {
+	        			smoother[i] = smoother[i-1];
+	        		};
+	        		smoother[0] = cents;
+	        		rotate(mode(smoother), temperament);
+	        	}
+	        	else console.log("denied!");
 	        	$("#cents").html(1200.0*fraction);
 	        }
 	    },
@@ -75,7 +94,7 @@ $(function(){
 	    //minNote: 69, // by MIDI note number
 	    //maxNote: 80, 
 
-	    minFrequency: 80,    // by Frequency in Hz
+	    minFrequency: 40,    // by Frequency in Hz
 	    maxFrequency: 20000,
 
 	    minPeriod: 2,  // by period (i.e. actual distance of calculation in audio buffer)
@@ -84,4 +103,41 @@ $(function(){
 	    // Start right away
 	    start: true // default: false
 	});
+
+	//event listeners
+	$("#one").on('mousedown', function(e){
+		console.log(e);
+		playNote("one");
+	});
 });
+
+function rotate(cents, temperament){
+	if(temperament == "equal"){
+		$("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
+	}
+}
+
+function mode(array){
+	//http://stackoverflow.com/questions/3783950/get-the-item-that-appears-the-most-times-in-an-array
+	var store = array;
+	var frequency = {};  // array of frequency.
+	var max = 0;  // holds the max frequency.
+	var result;   // holds the max frequency element.
+	for(var v in store) {
+	        frequency[store[v]]=(frequency[store[v]] || 0)+1; // increment frequency.
+	        if(frequency[store[v]] > max) { // is this frequency > max so far ?
+	                max = frequency[store[v]];  // update max.
+	                result = store[v];          // update result.
+	        }
+	}
+	return result;
+}
+
+function playNote(which){
+	var osc = audioContext.createOscillator();
+	osc.connect(audioContext.destination);
+	osc.type = "square";
+	osc.frequency.value = tonic;
+	osc.start();
+	osc.stop(audioContext.currentTime+0.5);
+}
