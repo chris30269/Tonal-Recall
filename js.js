@@ -51,17 +51,18 @@ $(function(){
 	        	// 	average += smoother[i];
 	        	// };
 	        	// average = average / (smoother.length*1.0);
-	        	var smoothed = mode(smoother);
-	        	console.log(smoothed);
-	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
-	        		//not an error
-	        		for (var i = smoother.length - 1; i >= 1; i--) {
-	        			smoother[i] = smoother[i-1];
-	        		};
-	        		smoother[0] = cents;
-	        		rotate(mode(smoother), temperament);
-	        	}
-	        	else console.log("denied!");
+	        	//var smoothed = mode(smoother);
+	        	// console.log(smoothed);
+	        	rotate(cents, temperament);
+	        	// if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
+	        	// 	//not an error
+	        	// 	for (var i = smoother.length - 1; i >= 1; i--) {
+	        	// 		smoother[i] = smoother[i-1];
+	        	// 	};
+	        	// 	smoother[0] = cents;
+	        	// 	rotate(mode(smoother), temperament);
+	        	// }
+	        	// else console.log("denied!");
 	        	$("#cents").html(1200.0*fraction);
 	        }
 	    },

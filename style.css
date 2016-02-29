@@ -1,7 +1,7 @@
 #ballcircle{
 	transform-origin: 50% 50%;
 	transform: rotate(30deg);
-	transition: transform 100ms;
+	transition: transform 500ms;
 }
 
 #viz{
