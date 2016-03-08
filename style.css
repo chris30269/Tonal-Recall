@@ -1,9 +1,18 @@
 #ballcircle{
-	transform: rotate(30deg);
 	transform-origin: 50% 50%;
-	transition: transform 100ms;
+	transform: rotate(30deg);
+	transition: transform 500ms;
 }
 
 #viz{
-	width: 25vw;
+	height: 90vh;
+	min-width: 50vw;
+	margin-left: 10vw;
+}
+
+.pie{
+	position: absolute;
+	top: 0;
+	height: 90vh;
+	min-width: 50vw;
 }
