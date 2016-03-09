@@ -195,7 +195,7 @@ function playNote(which){
 	osc.frequency.value = which;
 	osc.start();
 	osc.stop(audioContext.currentTime+0.5);
-	console.log("generating: "+which);
+	//console.log("generating: "+which);
 }
 
 function addEventListeners(options){
