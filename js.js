@@ -3,9 +3,16 @@ var notes = ["A", "A#/Bb", "B",     "C",     "C#/Db", "D",     "D#/Eb", "E",    
 var audioContext = new AudioContext();
 var tonic = 440;
 var cents = 0;
+var myInstrument;
 
-var temperament = "equal";
 var smoother = [0,0,0,0,0,0,0,0,0,0];
+
+var options = {
+		"clickable":[true,true,true,true,true,true,true],
+		"tonic":"random",
+		"temperament":"equal",
+		"A":440
+	}; //click to hear which notes?
 
 $(function(){
 
@@ -43,7 +50,7 @@ $(function(){
 	        if(stats.detected){
 	        	//var pitch = constrainPitch();
 	        	$("#hz").html(stats.frequency);
-	        	var fraction = Math.log(stats.frequency/tonic)/Math.log(2);
+	        	var fraction = Math.log(stats.frequency/freqs[0])/Math.log(2);
 	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
 	        	//if (fraction > 1) fraction = fraction%1;
 	        	// var average = 0;
@@ -51,18 +58,17 @@ $(function(){
 	        	// 	average += smoother[i];
 	        	// };
 	        	// average = average / (smoother.length*1.0);
-	        	//var smoothed = mode(smoother);
-	        	// console.log(smoothed);
-	        	rotate(cents, temperament);
-	        	// if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
-	        	// 	//not an error
-	        	// 	for (var i = smoother.length - 1; i >= 1; i--) {
-	        	// 		smoother[i] = smoother[i-1];
-	        	// 	};
-	        	// 	smoother[0] = cents;
-	        	// 	rotate(mode(smoother), temperament);
-	        	// }
-	        	// else console.log("denied!");
+	        	var smoothed = mode(smoother);
+	        	console.log(smoothed);
+	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
+	        		//not an error
+	        		for (var i = smoother.length - 1; i >= 1; i--) {
+	        			smoother[i] = smoother[i-1];
+	        		};
+	        		smoother[0] = cents;
+	        		rotate(mode(smoother), options.temperament);
+	        	}
+	        	else console.log("denied!");
 	        	$("#cents").html(1200.0*fraction);
 	        }
 	    },
@@ -71,7 +77,7 @@ $(function(){
 	    onDebug: function(stats, pitchDetector) { },
 
 	    // Minimal signal strength (RMS, Optional)
-	    minRms: 0.01,
+	    minRms: 0.03,
 
 	    // Detect pitch only with minimal correlation of: (Optional)
 	    minCorrelation: 0.9,
@@ -106,10 +112,20 @@ $(function(){
 	});
 
 	//event listeners
-	$("#one").on('mousedown', function(e){
-		console.log(e);
-		playNote("one");
-	});
+	addEventListeners(options);
+
+	//make tonic
+	makeTonic();
+
+	//timbre
+	var instrument = Chorus_Strings;
+	var real = new Float32Array(instrument.real.length);
+	var imag = new Float32Array(instrument.imag.length);
+	for (var i = 0; i < instrument.real.length; i++) {
+	  real[i] = instrument.real[i];
+	  imag[i] = instrument.imag[i];
+	}
+	myInstrument = audioContext.createPeriodicWave(real, imag);
 });
 
 function rotate(cents, temperament){
@@ -137,8 +153,56 @@ function mode(array){
 function playNote(which){
 	var osc = audioContext.createOscillator();
 	osc.connect(audioContext.destination);
-	osc.type = "square";
-	osc.frequency.value = tonic;
+	osc.setPeriodicWave(myInstrument);
+	osc.frequency.value = which;
 	osc.start();
 	osc.stop(audioContext.currentTime+0.5);
+}
+
+function addEventListeners(options){
+	//this should probably be a for loop...
+	if(options.clickable[0]){
+		$("#one_in, #one_out").on('mousedown', function(e){
+			playNote(freqs[0]);
+		});
+	}
+	if(options.clickable[1]){
+		$("#two_in, #two_out").on('mousedown', function(e){
+			console.log("play note 2");
+			playNote(freqs[2]);
+		});
+	}
+	if(options.clickable[2]){
+		$("#three_in, #three_out").on('mousedown', function(e){
+			playNote(freqs[4]);
+		});
+	}
+	if(options.clickable[3]){
+		$("#four_in, #four_out").on('mousedown', function(e){
+			playNote(freqs[5]);
+		});
+	}
+	if(options.clickable[4]){
+		$("#five_in, #five_out").on('mousedown', function(e){
+			playNote(freqs[7]);
+		});
+	}
+	if(options.clickable[5]){
+		$("#six_in, #six_out").on('mousedown', function(e){
+			playNote(freqs[9]);
+		});
+	}
+	if(options.clickable[6]){
+		$("#seven_in, #seven_out").on('mousedown', function(e){
+			playNote(freqs[11]);
+		});
+	}
+}
+
+function makeTonic(){
+	var tonic = Math.round(Math.random()*12);
+	freqs[0] = options.A*Math.pow(2, tonic/12);
+	for (var i = 0; i < freqs.length; i++) {
+		freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
+	};
 }
