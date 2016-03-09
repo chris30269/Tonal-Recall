@@ -84,6 +84,7 @@ $(function(){
 	        			}
 	        			if(perf.correctFrames > assignment.reqFrames){
 	        				//victory!
+	        				$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).removeClass("transparent");
 	        				perf.progress[perf.progress.indexOf(false)] = true;
 	        				perf.correctFrames = 0;
 	        				//reset viz
@@ -273,5 +274,6 @@ function loadAssignment(which){
 		$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).addClass("transparent");
 	}
 }

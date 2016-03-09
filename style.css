@@ -20,22 +20,32 @@
 
 .scale-full-1{
 	stop-color:red;
+	fill:red;
 }
 .scale-full-2{
 	stop-color:orange;
+	fill:orange;
 }
 .scale-full-3{
 	stop-color:yellow;
+	fill:yellow;
 }
 .scale-full-4{
 	stop-color:green;
+	fill:green;
 }
 .scale-full-5{
 	stop-color:blue;
+	fill:blue;
 }
 .scale-full-6{
 	stop-color:purple;
+	fill:purple;
 }
 .scale-full-7{
 	stop-color:pink;
+	fill:pink;
+}
+.transparent{
+	fill:none;
 }
