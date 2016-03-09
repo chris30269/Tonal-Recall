@@ -91,6 +91,8 @@ $(function(){
 	        				$("#radialStop1").removeClass();
 							$("#radialStop2").removeClass();
 							$("#radialStop3").removeClass();
+							$("#ballcircle > path").first().removeClass();
+							$("#ballcircle > path").first().addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
 	        				$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
 							$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
 							$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
@@ -275,5 +277,6 @@ function loadAssignment(which){
 		$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).addClass("transparent");
+		$("#ballcircle > path").first().addClass(""+assignment.viz+"-"+assignment.targets[0]);
 	}
 }
