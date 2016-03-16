@@ -19,9 +19,12 @@
 }
 #progress{
 	transform-origin: 50% 50%;
+	transition: transform 100ms;
+	transition-timing-function: ease-out;
+	transform: scale(0);
 }
 
-.scale-full-1{
+/*.scale-full-1{
 	stop-color:red;
 	fill:red;
 }
@@ -48,8 +51,7 @@
 .scale-full-7{
 	stop-color:pink;
 	fill:pink;
-}
+}*/
 .transparent{
 	fill:none;
-	stroke:black;
 }

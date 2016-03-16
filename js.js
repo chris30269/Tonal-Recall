@@ -60,10 +60,10 @@ $(function(){
 	        	if (fraction < 0) fraction = fraction*2;
 	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
 	        	var average = 0;
-	        	for (var i = smoother.length - 1; i >= 0; i--) {
-	        		average += smoother[i];
-	        	};
-	        	average = average / (smoother.length*1.0);
+	        	// for (var i = smoother.length - 1; i >= 0; i--) {
+	        	// 	average += smoother[i];
+	        	// };
+	        	// average = average / (smoother.length*1.0);
 	        	var smoothed = mode(smoother);
 	        	//console.log(smoothed);
 	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
@@ -80,28 +80,42 @@ $(function(){
 	        			if(cents < scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
 	        				//console.log("nailed it");
 	        				perf.correctFrames++;
-	        				$("#radialStop2").attr("stop-opacity", perf.correctFrames/assignment.reqFrames);
-	        				$("#radialStop2").attr("offset", 100*perf.correctFrames/assignment.reqFrames+"%");
+	        				// $("#radialStop2").attr("stop-opacity", perf.correctFrames/assignment.reqFrames);
+	        				// $("#radialStop2").attr("offset", 100*perf.correctFrames/assignment.reqFrames+"%");
+	        				var max = perf.correctFrames/assignment.reqFrames;
+	        				if (max > 1) max = 1;
+	        				$("#progress").css("transform", "scale("+max+")");
 	        			}
 	        			if(perf.correctFrames > assignment.reqFrames){
 	        				//victory!
 	        				$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).removeClass("transparent");
+	        				$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("stroke", "black");
+							$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("stroke", "black");
 	        				perf.progress[perf.progress.indexOf(false)] = true;
 	        				perf.correctFrames = 0;
 	        				//reset viz
-	        				$("#radialStop1").removeClass();
-							$("#radialStop2").removeClass();
-							$("#radialStop3").removeClass();
-							$("#ballcircle > path").first().removeClass();
-							$("#ballcircle > path").first().addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
-	        				$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
-							$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
-							$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
-							$("#radialStop2").attr("stop-opacity", 0);
-	        				$("#radialStop2").attr("offset", 0);
+	         				//$("#radialStop1").removeClass();
+							// $("#radialStop2").removeClass();
+							// $("#radialStop3").removeClass();
+							$("#ballcircle > path").first().attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+	         				//$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
+							// $("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
+							// $("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
+							// $("#radialStop2").attr("stop-opacity", 0);
+	         				//$("#radialStop2").attr("offset", 0);
+	         				window.setTimeout(function(){$("#progress").attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");}, 100)
+	         				$("#progress").css("transform", "scale(0)");
+	         				$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+							$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+							$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("id"));
+							$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("id"));
 	        			}
 	        		}
 	        		else{
+	        			//done with assignment
+	        			$("#ballcircle > path").first().attr("fill", "black");
+	        			$("#ballcircle > path").first().attr("stroke", "black");
+	        			$("#circle > path").attr("stroke", "black");
 	        			//add to local storage
 	        		}
 
@@ -115,7 +129,7 @@ $(function(){
 	    onDebug: function(stats, pitchDetector) { },
 
 	    // Minimal signal strength (RMS, Optional)
-	    minRms: 0.02,
+	    minRms: 0.05,
 
 	    // Detect pitch only with minimal correlation of: (Optional)
 	    minCorrelation: 0.9,
@@ -133,7 +147,7 @@ $(function(){
 	    stopAfterDetection: false,
 
 	    // Buffer length (Optional)
-	    length: 2048, // default 1024
+	    length: 1024, // default 1024
 
 	    // Limit range (Optional):
 	    //minNote: 69, // by MIDI note number
@@ -192,17 +206,24 @@ function mode(array){
 }
 
 function playNote(which){
-	var osc = audioContext.createOscillator();
-	osc.connect(audioContext.destination);
-	//osc.setPeriodicWave(myInstrument);
-	osc.frequency.value = which/2;
-	osc.start();
-	osc.stop(audioContext.currentTime+0.5);
-	console.log("generating: "+which);
+	// var osc = audioContext.createOscillator();
+	// osc.connect(audioContext.destination);
+	// osc.setPeriodicWave(myInstrument);
+	// osc.frequency.value = which/2;
+	// osc.start();
+	// osc.stop(audioContext.currentTime+0.5);
+	// console.log("generating: "+which);
+	// var osc2 = audioContext.createOscillator();
+	// osc2.connect(audioContext.destination);
+	// osc2.setPeriodicWave(myInstrument);
+	// osc2.frequency.value = which*2;
+	// osc2.start();
+	// osc2.stop(audioContext.currentTime+0.5);
+
 	var osc2 = audioContext.createOscillator();
 	osc2.connect(audioContext.destination);
-	//osc2.setPeriodicWave(myInstrument);
-	osc2.frequency.value = which*2;
+	osc2.setPeriodicWave(myInstrument);
+	osc2.frequency.value = which;
 	osc2.start();
 	osc2.stop(audioContext.currentTime+0.5);
 }
@@ -267,7 +288,7 @@ function loadAssignment(which){
 			"id":1,
 			"prompt":true,
 			"reqFrames":20,
-			"color": [0,0,0]
+			"color": [0,100,50]
 		};
 		perf = {
 			"systemOptions":options,
@@ -282,11 +303,26 @@ function loadAssignment(which){
 		for (var i = assignment.targets.length - 1; i >= 0; i--) {
 			perf.attempts[i] = [];
 		};
-		$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[0]);
-		$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[0]);
-		$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[0]);
-		// $("#progress").css("transform");
-		$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).addClass("transparent");
-		$("#ballcircle > path").first().addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		// $("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		// $("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		// $("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		$("#progress").attr("fill", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+		$("#progress").css("transform", "scale(0)");
+		if(assignment.targets.length > 3){
+			for (var i = 0; i < assignment.targets.length; i++) {
+				$($("#circle > path").get((((assignment.targets[i]-1)*2))+1)).attr("fill", "hsl("+(assignment.color[0]+(i*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+				$($("#circle > path").get((((assignment.targets[i]-1)*2)))).attr("fill", "hsl("+(assignment.color[0]+(i*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+			};
+		}
+		else{
+			for (var i = 0; i < assignment.targets.length; i++) {
+				$($("#circle > path").get((((assignment.targets[i]-1)*2))+1)).attr("fill", "hsl("+(assignment.color[0]+(i*30))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+				$($("#circle > path").get((((assignment.targets[i]-1)*2)))).attr("fill", "hsl("+(assignment.color[0]+(i*30))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+			};
+		}
+		//$("#circle > path").addClass("transparent");
+		$("#ballcircle > path").first().attr("fill", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+		$("#circle > path").first().attr("stroke", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+		$($("#circle > path").get(1)).attr("stroke", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
 	}
 }
