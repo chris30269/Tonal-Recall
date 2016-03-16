@@ -17,6 +17,9 @@
 	height: 90vh;
 	min-width: 50vw;
 }
+#progress{
+	transform-origin: 50% 50%;
+}
 
 .scale-full-1{
 	stop-color:red;
@@ -48,4 +51,5 @@
 }
 .transparent{
 	fill:none;
+	stroke:black;
 }

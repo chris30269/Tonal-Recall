@@ -9,7 +9,7 @@ var assignment;
 var perf;
 var slack = 10;
 
-var smoother = [0,0,0,0,0,0,0,0,0,0];
+var smoother = [0,0,0,0,0];
 
 var options = {
 		"clickable":[true,true,true,true,true,true,true],
@@ -59,11 +59,11 @@ $(function(){
 	        	else if (fraction < 0) fraction = fraction*2;
 	        	if (fraction < 0) fraction = fraction*2;
 	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
-	        	// var average = 0;
-	        	// for (var i = smoother.length - 1; i >= 0; i--) {
-	        	// 	average += smoother[i];
-	        	// };
-	        	// average = average / (smoother.length*1.0);
+	        	var average = 0;
+	        	for (var i = smoother.length - 1; i >= 0; i--) {
+	        		average += smoother[i];
+	        	};
+	        	average = average / (smoother.length*1.0);
 	        	var smoothed = mode(smoother);
 	        	//console.log(smoothed);
 	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
@@ -73,7 +73,8 @@ $(function(){
 	        			smoother[i] = smoother[i-1];
 	        		};
 	        		smoother[0] = cents;
-	        		rotate(mode(smoother), options.temperament);
+	        		//rotate(mode(smoother), options.temperament);
+	        		rotate(cents, options.temperament)
 	        		if(assignment && perf.progress.indexOf(false) > -1){
 	        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
 	        			if(cents < scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
@@ -114,7 +115,7 @@ $(function(){
 	    onDebug: function(stats, pitchDetector) { },
 
 	    // Minimal signal strength (RMS, Optional)
-	    minRms: 0.03,
+	    minRms: 0.02,
 
 	    // Detect pitch only with minimal correlation of: (Optional)
 	    minCorrelation: 0.9,
@@ -139,7 +140,7 @@ $(function(){
 	    //maxNote: 80, 
 
 	    minFrequency: 40,    // by Frequency in Hz
-	    maxFrequency: 20000,
+	    maxFrequency: 1000,
 
 	    minPeriod: 2,  // by period (i.e. actual distance of calculation in audio buffer)
 	    maxPeriod: 512, // --> convert to frequency: frequency = sampleRate / period
@@ -155,7 +156,7 @@ $(function(){
 	makeTonic();
 
 	//timbre
-	var instrument = Chorus_Strings;
+	var instrument = Organ_2;
 	var real = new Float32Array(instrument.real.length);
 	var imag = new Float32Array(instrument.imag.length);
 	for (var i = 0; i < instrument.real.length; i++) {
@@ -193,11 +194,17 @@ function mode(array){
 function playNote(which){
 	var osc = audioContext.createOscillator();
 	osc.connect(audioContext.destination);
-	osc.setPeriodicWave(myInstrument);
-	osc.frequency.value = which;
+	//osc.setPeriodicWave(myInstrument);
+	osc.frequency.value = which/2;
 	osc.start();
 	osc.stop(audioContext.currentTime+0.5);
-	//console.log("generating: "+which);
+	console.log("generating: "+which);
+	var osc2 = audioContext.createOscillator();
+	osc2.connect(audioContext.destination);
+	//osc2.setPeriodicWave(myInstrument);
+	osc2.frequency.value = which*2;
+	osc2.start();
+	osc2.stop(audioContext.currentTime+0.5);
 }
 
 function addEventListeners(options){
@@ -242,6 +249,7 @@ function addEventListeners(options){
 
 function makeTonic(){
 	var tonic = Math.round(Math.random()*12);
+	if(options.A > 439) options.A = options.A/2;
 	$("#tonic").html(tonic);
 	freqs[0] = options.A*Math.pow(2, tonic/12);
 	for (var i = 0; i < freqs.length; i++) {
@@ -251,14 +259,15 @@ function makeTonic(){
 
 function loadAssignment(which){
 	if(!which){} //free play
-	else if(1){
+	else if(which == 1){
 		//load ass 1
 		assignment = {
 			"targets" : [1,2,3,4,5,6,7],
 			"viz":"scale-full",
 			"id":1,
 			"prompt":true,
-			"reqFrames":20
+			"reqFrames":20,
+			"color": [0,0,0]
 		};
 		perf = {
 			"systemOptions":options,
@@ -276,6 +285,7 @@ function loadAssignment(which){
 		$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[0]);
 		$("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[0]);
+		// $("#progress").css("transform");
 		$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).addClass("transparent");
 		$("#ballcircle > path").first().addClass(""+assignment.viz+"-"+assignment.targets[0]);
 	}
