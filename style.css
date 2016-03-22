@@ -53,5 +53,9 @@
 	fill:pink;
 }*/
 .transparent{
-	fill:none;
+	fill-opacity:0;
+	transition: fill-opacity 3000ms;
+}
+.notTransparent{
+	fill-opacity:1;
 }

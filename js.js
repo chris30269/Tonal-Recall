@@ -88,9 +88,15 @@ $(function(){
 	        			}
 	        			if(perf.correctFrames > assignment.reqFrames){
 	        				//victory!
-	        				$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).removeClass("transparent");
-	        				$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("stroke", "black");
-							$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("stroke", "black");
+	        				//$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).removeClass("transparent");
+	        				$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("stroke", "black");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("stroke", "black");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).removeClass("transparent");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).removeClass("transparent");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).addClass("notTransparent");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).addClass("notTransparent");
+							// window.setTimeout(function(){$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).addClass("transparent");}, 50);
+							// window.setTimeout(function(){$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).addClass("transparent");}, 50);
 	        				perf.progress[perf.progress.indexOf(false)] = true;
 	        				perf.correctFrames = 0;
 	        				//reset viz
@@ -103,24 +109,28 @@ $(function(){
 							// $("#radialStop3").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
 							// $("#radialStop2").attr("stop-opacity", 0);
 	         				//$("#radialStop2").attr("offset", 0);
-	         				window.setTimeout(function(){$("#progress").attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");}, 100)
+	         				window.setTimeout(function(){if(assignment) $("#progress").attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");}, 100)
 	         				$("#progress").css("transform", "scale(0)");
-	         				$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
-							$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
-							$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((perf.progress.indexOf(false)*2)+1)).attr("id"));
-							$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(perf.progress.indexOf(false)*2)).attr("id"));
+	         				$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+							$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("id"));
+							$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("id"));
+							if(perf.progress.indexOf(false) < 0){
+			        			//done with assignment
+								$("#circle > path").attr("stroke", "black");
+								$("#circle > path").addClass("transparent");
+			        			if(assignment) loadAssignment(assignment.id+1);
+			        			else loadAssignment(null);
+								//add to local storage
+							}
 	        			}
 	        		}
 	        		else{
-	        			//done with assignment
-	        			$("#ballcircle > path").first().attr("fill", "black");
-	        			$("#ballcircle > path").first().attr("stroke", "black");
-	        			$("#circle > path").attr("stroke", "black");
-	        			//add to local storage
+	        			//maybe nothing?
 	        		}
 
 	        	}
-	        	else $("#ballcircle").css("opacity", ".5");
+	        	else $("#ballcircle").css("opacity", ".25");
 	        	$("#cents").html(cents);
 	        }
 	    },
@@ -307,17 +317,14 @@ function makeTonic(){
 }
 
 function loadAssignment(which){
-	if(!which){} //free play
-	else if(which == 1){
-		//load ass 1
-		assignment = {
-			"targets" : [1,2,3,4,5,6,7],
-			"viz":"scale-full",
-			"id":1,
-			"prompt":true,
-			"reqFrames":20,
-			"color": [0,100,50]
-		};
+	if(!assignAssignmnet(which)){
+		//free play
+		$("#ballcircle > path").first().attr("fill", "black");
+		$("#ballcircle > path").first().attr("stroke", "black");
+		$("#circle > path").attr("stroke", "black");
+	}
+	else{
+		
 		perf = {
 			"systemOptions":options,
 			"attempts":[],
@@ -349,8 +356,50 @@ function loadAssignment(which){
 			};
 		}
 		//$("#circle > path").addClass("transparent");
+		$("#ballcircle > path").attr("stroke", "none");
 		$("#ballcircle > path").first().attr("fill", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
 		$("#circle > path").first().attr("stroke", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
 		$($("#circle > path").get(1)).attr("stroke", "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+		$("use#use1").attr("xlink:href", "#"+$("#circle > path").first().attr("id"));
+		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
 	}
 }
+
+function assignAssignmnet(which){
+	assignment = null;
+	for (var i = assignments.length - 1; i >= 0; i--) {
+		if(assignments[i].id == which){
+			assignment = assignments[i];
+			//console.log("assigned "+which);
+		}
+	};
+	if(assignment == null) return false;
+	else return true;
+}
+
+var assignments = [
+	{
+		"targets" : [1,2,3,4,5,6,7],
+		"viz":"scale-full",
+		"id":1,
+		"prompt":true,
+		"reqFrames":20,
+		"color": [0,100,50]
+	},
+	{
+		"targets" : [1,2,3,4,5],
+		"viz":"scale-full",
+		"id":2,
+		"prompt":true,
+		"reqFrames":20,
+		"color": [30,70,50]
+	},
+	{
+		"targets" : [1,3,5],
+		"viz":"scale-full",
+		"id":3,
+		"prompt":true,
+		"reqFrames":20,
+		"color": [60,50,50]
+	}
+];
