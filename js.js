@@ -184,8 +184,36 @@ $(function(){
 });
 
 function rotate(cents, temperament){
+	//destroying the unequal distnces between notes in a scale
+	//all notes are equidistant from eachother...!
 	if(temperament == "equal"){
-		$("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
+		//todo: derive the note boundaries from the scale
+		var linearDegrees = (cents/1200)*360.0;
+		//$("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
+
+		//both offsets together
+		//you could also visual offset, then scale offset to avoid some jerkiness?
+		if(cents >= 100 && cents < 300){
+			linearDegrees -= 7.5;
+			//$("#ballcircle").css("transform", "rotate("+linearDegrees+"deg)");
+		}
+		else if(cents >= 300 && cents < 450){
+			linearDegrees -= 16.5;
+		}
+		else if(cents >= 450 && cents < 600){
+			linearDegrees += 4.5;
+		}
+		else if(cents >= 600 && cents < 800){
+			linearDegrees -= 4.5;
+		}
+		else if(cents >= 800 && cents < 1000){
+			linearDegrees -= 13.5;
+		}
+		else if(cents >= 1000 && cents < 1150){
+			linearDegrees -= 22.5;
+		}
+		else $("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
+		$("#ballcircle").css("transform", "rotate("+linearDegrees+"deg)");
 	}
 }
 
