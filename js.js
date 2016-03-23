@@ -88,21 +88,27 @@ $(function(){
 	        			}
 	        			if(perf.correctFrames > assignment.reqFrames){
 	        				//victory!
-	        				//$("."+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]).removeClass("transparent");
-	        				$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("stroke", "black");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("stroke", "black");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).removeClass("transparent");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).removeClass("transparent");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).addClass("notTransparent");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).addClass("notTransparent");
-							// window.setTimeout(function(){$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).addClass("transparent");}, 50);
-							// window.setTimeout(function(){$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).addClass("transparent");}, 50);
-	        				perf.progress[perf.progress.indexOf(false)] = true;
-	        				perf.correctFrames = 0;
-	        				//reset viz
-	         				//$("#radialStop1").removeClass();
-							// $("#radialStop2").removeClass();
-							// $("#radialStop3").removeClass();
+	        				//the one just finished
+	        				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
+							var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
+	        				$($("#circle > path").get(piece1-1)).attr("stroke", "black");
+							$($("#circle > path").get(piece2-1)).attr("stroke", "black");
+							$($("#circle > path").get(piece1-1)).removeClass("transparent");
+							$($("#circle > path").get(piece2-1)).removeClass("transparent");
+							$($("#circle > path").get(piece1-1)).addClass("notTransparent");
+							$($("#circle > path").get(piece2-1)).addClass("notTransparent");
+							$($("#circle > path").get(piece1-1)).removeClass("notTransparent");
+							$($("#circle > path").get(piece2-1)).removeClass("notTransparent");
+							$($("#circle > path").get(piece1-1)).addClass("transparent");
+							$($("#circle > path").get(piece2-1)).addClass("transparent");
+							// window.setTimeout(function(){$($("#circle > path").get(piece1-1)).removeClass("notTransparent").addClass("transparent");}, 50);
+							// window.setTimeout(function(){$($("#circle > path").get(piece2-1)).removeClass("notTransparent").addClass("transparent");}, 50);
+
+							//moving on
+							perf.correctFrames = 0;
+							perf.progress[perf.progress.indexOf(false)] = true;
+	         				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
+							var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
 							$("#ballcircle > path").first().attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
 	         				//$("#radialStop1").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
 							// $("#radialStop2").addClass(""+assignment.viz+"-"+assignment.targets[perf.progress.indexOf(false)]);
@@ -111,13 +117,14 @@ $(function(){
 	         				//$("#radialStop2").attr("offset", 0);
 	         				window.setTimeout(function(){if(assignment) $("#progress").attr("fill", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");}, 100)
 	         				$("#progress").css("transform", "scale(0)");
-	         				$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
-							$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+	         				$($("#circle > path").get(piece1-1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
+							$($("#circle > path").get(piece2-1)).attr("stroke", "hsl("+(assignment.color[0]+(perf.progress.indexOf(false)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)");
 							$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("id"));
 							$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("id"));
 							if(perf.progress.indexOf(false) < 0){
 			        			//done with assignment
 								$("#circle > path").attr("stroke", "black");
+								$("#circle > path").removeClass("notTransparent");
 								$("#circle > path").addClass("transparent");
 			        			if(assignment) loadAssignment(assignment.id+1);
 			        			else loadAssignment(null);
