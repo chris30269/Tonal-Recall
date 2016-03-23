@@ -124,6 +124,10 @@ $(function(){
 			        			//done with assignment
 								$("#circle > path").attr("fill", "none");
 								$("#circle > path").removeClass("transparent");
+								//update progress bar
+								perfs.push(perf);
+								updateProgressBar();
+								//go to new assignment
 			        			if(assignment) loadAssignment(assignment.id+1);
 			        			else loadAssignment(null);
 								//add to local storage
@@ -367,6 +371,24 @@ function assignAssignmnet(which){
 	else return true;
 }
 
+function updateProgressBar(){
+	var total = assignments.length;
+	var completed = [];
+	for (var i = perfs.length - 1; i >= 0; i--) {
+		if(perfs[i].progress.indexOf(false) < 0){
+			if(completed.indexOf(perfs[i].assignment) < 0){
+				completed.push(perfs[i].assignment);
+			}
+		}
+	};
+	var percent = completed.length/total;
+	//42px angle difference
+	//22 - 538
+	var change = 516/total;
+	$("#angle")[0].points.getItem(1).x += change;
+	$("#angle")[0].points.getItem(2).x += change;
+}
+
 var assignments = [
 	{
 		"targets" : [1,2,3,4,5,6,7],
@@ -393,3 +415,4 @@ var assignments = [
 		"color": [60,50,50]
 	}
 ];
+var perfs=[];
