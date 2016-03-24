@@ -216,8 +216,6 @@ $(function(){
 	}
 	myInstrument = audioContext.createPeriodicWave(real, imag);
 
-	//but is you allowed?!
-
 	//check if user yet
 	user = localStorage.getItem("userId");
 	if(!user){
@@ -235,7 +233,10 @@ $(function(){
 		$.post( "php/returning.php", {"userId":user}, function(data) {
 			//figure out where they are
 			var temp = [];
-			if(data != "new"){
+			if(data == "new" || data == ""){
+				loadAssignment(1);
+			}
+			else{
 				perfs = JSON.parse(data);
 				for (var i = perfs.length - 1; i >= 0; i--) {
 					temp.push(perfs[i].assignment);
@@ -247,7 +248,7 @@ $(function(){
 					}
 				};
 			}
-			else loadAssignment(1);
+			updateProgressBar();
 		});
 	}
 
@@ -382,6 +383,7 @@ function loadAssignment(which){
 		$("#ballcircle > path").first().attr("fill", "black");
 		$("#ballcircle > path").first().attr("stroke", "black");
 		$("#circle > path").attr("stroke", "black");
+		updateProgressBar();
 	}
 	else{
 		
@@ -417,6 +419,7 @@ function loadAssignment(which){
 			$($(".progressDot").get(i)).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
+		updateProgressBar();
 	}
 }
 
@@ -446,8 +449,8 @@ function updateProgressBar(){
 	//42px angle difference
 	//22 - 538
 	var change = 516/total;
-	$("#angle")[0].points.getItem(1).x += change;
-	$("#angle")[0].points.getItem(2).x += change;
+	$("#angle")[0].points.getItem(1).x = 42+22+(516*percent);
+	$("#angle")[0].points.getItem(2).x = 22+(516*percent);
 }
 
 function determineColor(pie) {
