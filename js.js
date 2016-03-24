@@ -101,6 +101,8 @@ $(function(){
 							$($("#circle > path").get(piece2-1)).addClass("transparent");
 							$($("#circle > path").get(piece1-1)).removeClass("notTransparent");
 							$($("#circle > path").get(piece2-1)).removeClass("notTransparent");
+							var color = $($(".progressDot").get(assignment.targets[perf.progress.indexOf(false)]-1)).attr("stroke");
+							$($(".progressDot").get(assignment.targets[perf.progress.indexOf(false)]-1)).attr("fill", color);
 							if(assignment.targets.length > 3){
 								var color = "hsl("+(assignment.color[0]+((piece2/2)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)";
 							}
@@ -113,6 +115,7 @@ $(function(){
 							perf.progress[perf.progress.indexOf(false)] = true;
 	         				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
 							var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
+							$($(".progressDot").get(assignment.targets[perf.progress.indexOf(false)]-1)).attr("stroke", color);
 							$("#ballcircle > path").first().attr("fill", color);
 	         				window.setTimeout(function(){if(perf.progress.indexOf(false) != 0) $("#progress").attr("fill", color);}, 100)
 	         				$("#progress").css("transform", "scale(0)");
@@ -127,6 +130,8 @@ $(function(){
 								//update progress bar
 								perfs.push(perf);
 								updateProgressBar();
+								$(".progressDot").attr("stroke", "none");
+								$(".progressDot").attr("fill", "none");
 								//go to new assignment
 			        			if(assignment) loadAssignment(assignment.id+1);
 			        			else loadAssignment(null);
@@ -284,7 +289,7 @@ function addEventListeners(options){
 	}
 	if(options.clickable[1]){
 		$("#two_in, #two_out").on('mousedown', function(e){
-			console.log("play note 2");
+			//console.log("play note 2");
 			playNote(freqs[2]);
 		});
 	}
@@ -356,6 +361,14 @@ function loadAssignment(which){
 		$($("#circle > path").get(1)).attr("fill", color);
 		$("use#use1").attr("xlink:href", "#"+$("#circle > path").first().attr("id"));
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
+		$("#angle").attr("fill", color);
+		$("#notAngle").attr("fill", color);
+
+		//last one is 580, first one is 22
+		for (var i = 0; i < assignment.targets.length; i++) {
+			$($(".progressDot").get(i)).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
+		};
+		$($(".progressDot").get(0)).attr("stroke", color);
 	}
 }
 
