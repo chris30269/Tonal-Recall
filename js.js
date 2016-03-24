@@ -8,6 +8,8 @@ var myInstrument;
 var assignment;
 var perf;
 var slack = 10;
+var perfs=[];
+var user;
 
 var smoother = [0,0,0,0,0];
 
@@ -135,7 +137,18 @@ $(function(){
 								//go to new assignment
 			        			if(assignment) loadAssignment(assignment.id+1);
 			        			else loadAssignment(null);
-								//add to local storage
+								
+								//save
+								//start feedback
+								var stringified = JSON.stringify(perfs);
+								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
+									if(data == "success"){
+										console.log("saved!");
+										//end feedback
+									}
+									else console.log("something went wrong?");
+									console.log("data: "+data);
+								});
 							}
 	        			}
 	        		}
@@ -203,14 +216,47 @@ $(function(){
 	}
 	myInstrument = audioContext.createPeriodicWave(real, imag);
 
-	//start assignment 1
-	loadAssignment(1);
+	//but is you allowed?!
+
+	//check if user yet
+	user = localStorage.getItem("userId");
+	if(!user){
+		console.log("You're not a user yet");
+		//get an Id for them
+		$.post( "php/new.php", function(data) {
+			localStorage.setItem("userId", data);
+			//start assignment 1
+			loadAssignment(1);
+		});
+	}
+	else{
+		//get their most recent data
+		console.log("you are user: "+user);
+		$.post( "php/returning.php", {"userId":user}, function(data) {
+			//figure out where they are
+			var temp = [];
+			if(data != "new"){
+				perfs = JSON.parse(data);
+				for (var i = perfs.length - 1; i >= 0; i--) {
+					temp.push(perfs[i].assignment);
+				};
+				for (var i = 0; i < assignments.length; i++) {
+					if(temp.indexOf(assignments[i].id) < 0){
+						loadAssignment(assignments[i].id);
+						break;
+					}
+				};
+			}
+			else loadAssignment(1);
+		});
+	}
+
 });
 
 function rotate(cents, temperament){
 	//destroying the unequal distnces between notes in a scale
 	//all notes are equidistant from eachother...!
-	if(temperament == "equal"){
+	if(options.temperament == "equal"){
 		//todo: derive the note boundaries from the scale
 		var linearDegrees = (cents/1200)*360.0;
 		//$("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
@@ -432,7 +478,7 @@ var assignments = [
 		"id":2,
 		"prompt":true,
 		"reqFrames":20,
-		"color": [30,70,50]
+		"color": [310,100,50]
 	},
 	{
 		"targets" : [1,3,5],
@@ -440,7 +486,6 @@ var assignments = [
 		"id":3,
 		"prompt":true,
 		"reqFrames":20,
-		"color": [60,50,50]
+		"color": [250,100,50]
 	}
 ];
-var perfs=[];
