@@ -104,10 +104,10 @@ $(function(){
 							var color = $($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke");
 							$($(".progressDot").get(perf.progress.indexOf(false))).attr("fill", color);
 							if(assignment.targets.length > 3){
-								var color = "hsl("+(assignment.color[0]+((piece2/2)*(360/assignment.targets.length)))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)";
+								var color = determineColor(1+(piece2/2));
 							}
 							else{
-								var color = "hsl("+(assignment.color[0]+((piece2/2)*30))+","+assignment.color[1]+"%,"+assignment.color[2]+"%)";
+								var color = determineColor(1+(piece2/2));
 							}
 
 							//moving on
@@ -402,6 +402,19 @@ function updateProgressBar(){
 	var change = 516/total;
 	$("#angle")[0].points.getItem(1).x += change;
 	$("#angle")[0].points.getItem(2).x += change;
+}
+
+function determineColor(pie) {
+	var baseh = assignment.color[0];
+	var bases = assignment.color[1];
+	var basel = assignment.color[2];
+	if(pie == 1) return "hsl("+baseh+","+bases+"%,"+basel+"%)";
+	if(pie == 2) return "hsl("+(baseh+(2*(180/5)))+","+bases+"%,"+basel+"%)";
+	if(pie == 3) return "hsl("+(baseh+(3*(180/5)))+","+bases+"%,"+basel+"%)";
+	if(pie == 4) return "hsl("+(baseh+(4*(180/5)))+","+bases+"%,"+basel+"%)";
+	if(pie == 5) return "hsl("+(baseh+(5*(180/5)))+","+bases+"%,"+basel+"%)";
+	if(pie == 6) return "hsl("+(180+(1*(180/3)))+","+bases+"%,"+basel+"%)";
+	if(pie == 7) return "hsl("+(180+(2*(180/3)))+","+bases+"%,"+basel+"%)";
 }
 
 var assignments = [
