@@ -129,7 +129,7 @@ $(function(){
 			        			//done with assignment
 								$("#circle > path").attr("fill", "none");
 								$("#circle > path").removeClass("transparent");
-								//update progress bar
+								perf.finished = Math.round(Date.now()/1000);
 								perfs.push(perf);
 								updateProgressBar();
 								$(".progressDot").attr("stroke", "none");
@@ -143,11 +143,11 @@ $(function(){
 								var stringified = JSON.stringify(perfs);
 								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
 									if(data == "success"){
-										console.log("saved!");
+										//console.log("saved!");
 										//end feedback
 									}
 									else console.log("something went wrong?");
-									console.log("data: "+data);
+									//console.log("data: "+data);
 								});
 							}
 	        			}
@@ -392,7 +392,9 @@ function loadAssignment(which){
 			"attempts":[],
 			"assignment":which,
 			"progress":[],
-			"correctFrames":0
+			"correctFrames":0,
+			"started":Math.round(Date.now()/1000),
+			"finished":false
 		};
 		for (var i = assignment.targets.length - 1; i >= 0; i--) {
 			perf.progress[i] = false;
