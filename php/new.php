@@ -9,7 +9,8 @@ if($link){
 		mysqli_free_result($result);
 
 		if ($num <= $IRBallowed) {
-			$sql = "INSERT INTO `userData`(`data`) VALUES ('new');";
+			$t = time();
+			$sql = "INSERT INTO `userData`(`data`, `joined`) VALUES ('new', $t);";
 			if ($result = mysqli_query($link, $sql)) {
 				echo mysqli_insert_id($link);
 
