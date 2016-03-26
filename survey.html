@@ -1,5 +1,6 @@
 <html>
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<style type="text/css">
 		#container{
 			min-width: 50vw;
@@ -427,4 +428,24 @@
 		<button>Save</button>
 	</div>
 </body>
+<script type="text/javascript">
+	$("button").first().on("click", function(){
+		var selected = $("input:checked");
+		var temp={};
+		for (var i = 0; i < selected.length; i++) {
+			temp[selected[i].name] = selected[i].value;
+		};
+		if($("input[name=question3]").val()) temp.question3 = $("input[name=question3]").val();
+		if($("input[name=question17]").val()) temp.question17 = $("input[name=question17]").val();
+		var followups = $("textarea");
+		var followupsTemp = {};
+		for (var i = 0; i < followups.length; i++) {
+			if(i!=2){
+				followupsTemp["followup"+(i+1)] = $(followups[i]).val();
+			}
+		};
+		console.log(JSON.stringify(temp));
+		console.log(JSON.stringify(followupsTemp));
+	});
+</script>
 </html>
