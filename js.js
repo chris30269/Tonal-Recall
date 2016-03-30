@@ -1,7 +1,7 @@
 var freqs = [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305];
 var notes = ["A", "A#/Bb", "B",     "C",     "C#/Db", "D",     "D#/Eb", "E",     "F",     "F#/Gb", "G",     "G#"];
 var scale = [0,200,400,500,700,900,1100];//major scale
-var audioContext = new AudioContext();
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var tonic = 440;
 var cents = 0;
 var myInstrument;
@@ -21,6 +21,38 @@ var options = {
 	}; //click to hear which notes?
 
 $(function(){
+
+	//check if user yet
+	user = localStorage.getItem("userId");
+	if(!user){
+		console.log("You're not a user yet");
+		//get consent
+		window.location.href = "consent.html";
+	}
+	else{
+		//get their most recent data
+		console.log("you are user: "+user);
+		$.post( "php/returning.php", {"userId":user}, function(data) {
+			//figure out where they are
+			var temp = [];
+			if(data == "new" || data == ""){
+				loadAssignment(1);
+			}
+			else{
+				perfs = JSON.parse(data);
+				for (var i = perfs.length - 1; i >= 0; i--) {
+					temp.push(perfs[i].assignment);
+				};
+				for (var i = 0; i < assignments.length; i++) {
+					if(temp.indexOf(assignments[i].id) < 0){
+						loadAssignment(assignments[i].id);
+						break;
+					}
+				};
+			}
+			updateProgressBar();
+		});
+	}
 
 	detector = new PitchDetector({
 	    // Audio Context (Required)
@@ -215,42 +247,6 @@ $(function(){
 	  imag[i] = instrument.imag[i];
 	}
 	myInstrument = audioContext.createPeriodicWave(real, imag);
-
-	//check if user yet
-	user = localStorage.getItem("userId");
-	if(!user){
-		console.log("You're not a user yet");
-		//get an Id for them
-		$.post( "php/new.php", function(data) {
-			localStorage.setItem("userId", data);
-			//start assignment 1
-			loadAssignment(1);
-		});
-	}
-	else{
-		//get their most recent data
-		console.log("you are user: "+user);
-		$.post( "php/returning.php", {"userId":user}, function(data) {
-			//figure out where they are
-			var temp = [];
-			if(data == "new" || data == ""){
-				loadAssignment(1);
-			}
-			else{
-				perfs = JSON.parse(data);
-				for (var i = perfs.length - 1; i >= 0; i--) {
-					temp.push(perfs[i].assignment);
-				};
-				for (var i = 0; i < assignments.length; i++) {
-					if(temp.indexOf(assignments[i].id) < 0){
-						loadAssignment(assignments[i].id);
-						break;
-					}
-				};
-			}
-			updateProgressBar();
-		});
-	}
 
 });
 

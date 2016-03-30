@@ -10,7 +10,7 @@ if($link){
 
 		if ($num <= $IRBallowed) {
 			$t = time();
-			$sql = "INSERT INTO `userData`(`data`, `joined`) VALUES ('new', $t);";
+			$sql = "INSERT INTO `userData`(`data`, `joined`, `consent`) VALUES ('new', $t, $t);";
 			if ($result = mysqli_query($link, $sql)) {
 				echo mysqli_insert_id($link);
 
