@@ -368,6 +368,7 @@ function makeTonic(){
 	if(options.A > 439) options.A = options.A/2;
 	$("#tonic").html(tonic);
 	freqs[0] = options.A*Math.pow(2, tonic/12);
+	//todo: use scale
 	for (var i = 0; i < freqs.length; i++) {
 		freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
 	};
