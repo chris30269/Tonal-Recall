@@ -10,6 +10,7 @@ var perf;
 var slack = 10;
 var perfs=[];
 var user;
+var animationDelay = 0.1; //seconds between demo notes
 
 var smoother = [0,0,0,0,0];
 
@@ -114,13 +115,11 @@ $(function(){
 	        			if(cents < scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
 	        				//console.log("nailed it");
 	        				perf.correctFrames++;
-	        				// $("#radialStop2").attr("stop-opacity", perf.correctFrames/assignment.reqFrames);
-	        				// $("#radialStop2").attr("offset", 100*perf.correctFrames/assignment.reqFrames+"%");
-	        				var max = perf.correctFrames/assignment.reqFrames;
+	        				var max = perf.correctFrames/assignment.reqFrames[perf.progress.indexOf(false)];
 	        				if (max > 1) max = 1;
 	        				$("#progress").css("transform", "scale("+max+")");
 	        			}
-	        			if(perf.correctFrames > assignment.reqFrames){
+	        			if(perf.correctFrames > assignment.reqFrames[perf.progress.indexOf(false)]){
 	        				//victory!
 	        				//the one just finished
 	        				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
@@ -300,7 +299,7 @@ function mode(array){
 	return result;
 }
 
-function playNote(which){
+function playNote(which, duration, when){
 	// var osc = audioContext.createOscillator();
 	// osc.connect(audioContext.destination);
 	// osc.setPeriodicWave(myInstrument);
@@ -315,12 +314,14 @@ function playNote(which){
 	// osc2.start();
 	// osc2.stop(audioContext.currentTime+0.5);
 
+	if (!duration) duration = 0.5;
+	if(!when) when = audioContext.currentTime;
 	var osc2 = audioContext.createOscillator();
 	osc2.connect(audioContext.destination);
 	osc2.setPeriodicWave(myInstrument);
 	osc2.frequency.value = which;
-	osc2.start();
-	osc2.stop(audioContext.currentTime+0.5);
+	osc2.start(when);
+	osc2.stop(when+duration);
 }
 
 function addEventListeners(options){
@@ -419,7 +420,31 @@ function loadAssignment(which){
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
+		// if(prompt) demoAss();
 	}
+}
+
+function animateAss(delay, j){
+	window.setTimeout(function(){$($("#circle > path").get(((assignment.targets[j]*2)-1)-1)).attr("stroke", determineColor(assignment.targets[j]));$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[j]*2)-1)).attr("id"));}, delay);
+	window.setTimeout(function(){$($("#circle > path").get(((assignment.targets[j]*2))-1)).attr("stroke", determineColor(assignment.targets[j]));$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[j]*2)-2)).attr("id"));}, delay);
+}
+function deAnimateAss(delay, j){
+	window.setTimeout(function(){$($("#circle > path").get(((assignment.targets[j]*2)-1)-1)).attr("stroke", "black");}, delay);
+	window.setTimeout(function(){$($("#circle > path").get(((assignment.targets[j]*2))-1)).attr("stroke", "black");}, delay);
+}
+
+function demoAss(){
+	var delay = 0;
+	for (var i = 0; i < assignment.reqFrames.length; i++) {
+		//gotta make sure reqFrames and targets are synchronized
+		var duration = assignment.reqFrames[i]*detector.options.length/44100;//seconds of the note
+		playNote(freqs[i], duration, audioContext.currentTime+delay);
+
+		animateAss((delay*1000), i);
+		delay += duration;
+		deAnimateAss((1000*delay), i);
+		delay += animationDelay;
+	};
 }
 
 function assignAssignmnet(which){
@@ -471,15 +496,15 @@ var assignments = [
 		"viz":"scale-full",
 		"id":1,
 		"prompt":true,
-		"reqFrames":20,
+		"reqFrames":[20,20,20,20,20,20,20],
 		"color": [0,100,50]
 	},
 	{
 		"targets" : [1,2,3,4,5],
 		"viz":"scale-full",
 		"id":2,
-		"prompt":true,
-		"reqFrames":20,
+		"prompt":false,
+		"reqFrames":[40,20,20,20,40],
 		"color": [310,100,50]
 	},
 	{
@@ -487,7 +512,7 @@ var assignments = [
 		"viz":"scale-full",
 		"id":3,
 		"prompt":true,
-		"reqFrames":20,
+		"reqFrames":[20,20,20],
 		"color": [250,100,50]
 	}
 ];
