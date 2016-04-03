@@ -420,7 +420,7 @@ function loadAssignment(which){
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
-		// if(prompt) demoAss();
+		if(assignment.prompt) demoAss();
 	}
 }
 
