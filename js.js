@@ -12,7 +12,7 @@ var perfs=[];
 var user;
 var animationDelay = 0.1; //seconds between demo notes
 
-var smoother = [0,0,0,0,0];
+var smoother = [0,0,0,0,0,0,0,0,0,0];
 
 var options = {
 		"clickable":[true,true,true,true,true,true,true],
@@ -89,27 +89,25 @@ $(function(){
 	        if(stats.detected){
 	        	//var pitch = constrainPitch();
 	        	$("#hz").html(stats.frequency);
-	        	var fraction = Math.log(stats.frequency/freqs[0])/Math.log(2);
-	        	if (fraction > 1) fraction = fraction%1;
-	        	else if (fraction < 0) fraction = fraction*2;
-	        	if (fraction < 0) fraction = fraction*2;
+	        	var fraction = Math.log(stats.frequency/freqs[0])/Math.log(2)%1;
 	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
-	        	var average = 0;
+	        	cents = cents%1200;
+	        	// var average = 0;
 	        	// for (var i = smoother.length - 1; i >= 0; i--) {
 	        	// 	average += smoother[i];
 	        	// };
 	        	// average = average / (smoother.length*1.0);
-	        	var smoothed = mode(smoother);
+	        	// var smoothed = mode(smoother);
 	        	//console.log(smoothed);
-	        	if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
-	        		//not an error
-	        		$("#ballcircle").css("opacity", "1");
+	        	// if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
+	        	// 	//not an error
+	        		// $("#ballcircle").css("opacity", "1");
 	        		for (var i = smoother.length - 1; i >= 1; i--) {
 	        			smoother[i] = smoother[i-1];
 	        		};
 	        		smoother[0] = cents;
-	        		//rotate(mode(smoother), options.temperament);
-	        		rotate(cents, options.temperament)
+	        		rotate(mode(smoother), options.temperament);
+	        		// rotate(cents, options.temperament)
 	        		if(assignment && perf.progress.indexOf(false) > -1){
 	        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
 	        			if(cents < scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
@@ -187,8 +185,8 @@ $(function(){
 	        			//maybe nothing?
 	        		}
 
-	        	}
-	        	else $("#ballcircle").css("opacity", ".25");
+	        	// }
+	        	// else $("#ballcircle").css("opacity", ".25");
 	        	$("#cents").html(cents);
 	        }
 	    },
@@ -197,7 +195,7 @@ $(function(){
 	    onDebug: function(stats, pitchDetector) { },
 
 	    // Minimal signal strength (RMS, Optional)
-	    minRms: 0.05,
+	    minRms: 0.02,
 
 	    // Detect pitch only with minimal correlation of: (Optional)
 	    minCorrelation: 0.9,
@@ -300,12 +298,14 @@ function mode(array){
 }
 
 function playNote(which, duration, when){
-	// var osc = audioContext.createOscillator();
-	// osc.connect(audioContext.destination);
-	// osc.setPeriodicWave(myInstrument);
-	// osc.frequency.value = which/2;
-	// osc.start();
-	// osc.stop(audioContext.currentTime+0.5);
+	if (!duration) duration = 0.5;
+	if(!when) when = audioContext.currentTime;
+	var osc = audioContext.createOscillator();
+	osc.connect(audioContext.destination);
+	osc.setPeriodicWave(myInstrument);
+	osc.frequency.value = which*2;
+	osc.start(when);
+	osc.stop(when+duration);
 	// console.log("generating: "+which);
 	// var osc2 = audioContext.createOscillator();
 	// osc2.connect(audioContext.destination);
@@ -314,8 +314,6 @@ function playNote(which, duration, when){
 	// osc2.start();
 	// osc2.stop(audioContext.currentTime+0.5);
 
-	if (!duration) duration = 0.5;
-	if(!when) when = audioContext.currentTime;
 	var osc2 = audioContext.createOscillator();
 	osc2.connect(audioContext.destination);
 	osc2.setPeriodicWave(myInstrument);
@@ -366,7 +364,7 @@ function addEventListeners(options){
 
 function makeTonic(){
 	var tonic = Math.round(Math.random()*12);
-	if(options.A > 439) options.A = options.A/2;
+	if(options.A > 219) options.A = options.A/4;
 	$("#tonic").html(tonic);
 	freqs[0] = options.A*Math.pow(2, tonic/12);
 	//todo: use scale
