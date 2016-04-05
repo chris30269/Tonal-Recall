@@ -21,7 +21,7 @@ var options = {
 		"tonic":"random",
 		"temperament":"equal",
 		"A":440,
-		"scale": [0,50,100,150,200,250,300, 350],
+		"scale": [0,200,400,500,700,900,1100, 1200],
 		"freqs": [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305],
 		"colors":[0,10,20,30,40,50,60]
 	}; //click to hear which notes?
@@ -140,6 +140,7 @@ $(function(){
 							$($("#circle > path").get(piece2-1)).removeClass("notTransparent");
 							var color = $($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke");
 							$($(".progressDot").get(perf.progress.indexOf(false))).attr("fill", color);
+							$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", "black");
 							if(assignment.targets.length > 3){
 								var color = determineColor(1+(piece2/2));
 							}
@@ -396,7 +397,6 @@ function loadAssignment(which){
 		updateProgressBar();
 	}
 	else{
-		
 		perf = {
 			"systemOptions":options,
 			"attempts":[],

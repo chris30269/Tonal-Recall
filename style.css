@@ -9,14 +9,13 @@ html{
 
 #viz{
 	height: 86vh;
-	min-width: 50vw;
-	width: 50vw;
+	width: 45vw;
 	margin-left: 25vw;
 }
 #bar{
 	/*background-color: lightgrey;*/
 	height: 14vh;
-	width: 50vw;
+	width: 45vw;
 	margin-left: 25vw;
 }
 
