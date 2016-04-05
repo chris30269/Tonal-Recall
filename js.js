@@ -22,7 +22,8 @@ var options = {
 		"temperament":"equal",
 		"A":440,
 		"scale": [0,200,400,500,700,900,1100, 1200],
-		"freqs": [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305]
+		"freqs": [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305],
+		"colors":[0,10,20,30,40,50,60]
 	}; //click to hear which notes?
 
 $(function(){
@@ -115,7 +116,7 @@ $(function(){
 	        		// rotate(cents, options.temperament)
 	        		if(assignment && perf.progress.indexOf(false) > -1){
 	        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
-	        			if(cents < scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
+	        			if(cents < options.scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > options.scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
 	        				//console.log("nailed it");
 	        				perf.correctFrames++;
 	        				var max = perf.correctFrames/assignment.reqFrames[perf.progress.indexOf(false)];
@@ -382,6 +383,7 @@ function makeTonic(){
 	options.freqs = [];
 	for (var i = 0; i < options.scale.length-1; i++) {
 		options.freqs[i] = options.A*Math.pow(2, ((tonic*100)+options.scale[i])/1200);
+		options.colors[i] = (((tonic*100)+options.scale[i])/1200*360)%360;
 	};
 }
 
@@ -411,7 +413,7 @@ function loadAssignment(which){
 			perf.attempts[i] = [];
 		};
 
-		var color = "hsl("+assignment.color[0]+","+assignment.color[1]+"%,"+assignment.color[2]+"%)";
+		var color = "hsl("+options.colors[0]+","+100+"%,"+50+"%)";
 		$("#progress").attr("fill", color);
 		$("#progress").css("transform", "scale(0)");
 		$("#ballcircle > path").first().attr("fill", color);
@@ -488,16 +490,13 @@ function updateProgressBar(){
 }
 
 function determineColor(pie) {
-	var baseh = assignment.color[0];
-	var bases = assignment.color[1];
-	var basel = assignment.color[2];
-	if(pie == 1) return "hsl("+baseh+","+bases+"%,"+basel+"%)";
-	if(pie == 2) return "hsl("+(baseh+(2*(180/5)))+","+bases+"%,"+basel+"%)";
-	if(pie == 3) return "hsl("+(baseh+(3*(180/5)))+","+bases+"%,"+basel+"%)";
-	if(pie == 4) return "hsl("+(baseh+(4*(180/5)))+","+bases+"%,"+basel+"%)";
-	if(pie == 5) return "hsl("+(baseh+(5*(180/5)))+","+bases+"%,"+basel+"%)";
-	if(pie == 6) return "hsl("+(180+(1*(180/3)))+","+bases+"%,"+basel+"%)";
-	if(pie == 7) return "hsl("+(180+(2*(180/3)))+","+bases+"%,"+basel+"%)";
+	if(pie == 1) return "hsl("+options.colors[0]+","+100+"%,"+50+"%)";
+	if(pie == 2) return "hsl("+options.colors[1]+","+100+"%,"+50+"%)";
+	if(pie == 3) return "hsl("+options.colors[2]+","+100+"%,"+50+"%)";
+	if(pie == 4) return "hsl("+options.colors[3]+","+100+"%,"+50+"%)";
+	if(pie == 5) return "hsl("+options.colors[4]+","+100+"%,"+50+"%)";
+	if(pie == 6) return "hsl("+options.colors[5]+","+100+"%,"+50+"%)";
+	if(pie == 7) return "hsl("+options.colors[6]+","+100+"%,"+50+"%)";
 }
 
 var assignments = [
