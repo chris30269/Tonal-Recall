@@ -21,7 +21,7 @@ var options = {
 		"tonic":"random",
 		"temperament":"equal",
 		"A":440,
-		"scale": [0,200,400,500,700,900,1100, 1200],
+		"scale": [0,50,100,150,200,250,300, 350],
 		"freqs": [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305],
 		"colors":[0,10,20,30,40,50,60]
 	}; //click to hear which notes?
@@ -421,9 +421,6 @@ function loadAssignment(which){
 		$($("#circle > path").get(1)).attr("fill", color);
 		$("use#use1").attr("xlink:href", "#"+$("#circle > path").first().attr("id"));
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
-		$("#angle").attr("fill", color);
-		$("#notAngle").attr("fill", color);
-
 		$(".progressDot").attr("stroke", "none");
 		$(".progressDot").attr("fill", "none");
 		//last one is 580, first one is 22
@@ -487,6 +484,9 @@ function updateProgressBar(){
 	var change = 516/total;
 	$("#angle")[0].points.getItem(1).x = 42+22+(516*percent);
 	$("#angle")[0].points.getItem(2).x = 22+(516*percent);
+	var color = "hsl("+(percent*360)+","+100+"%,"+50+"%)";
+	$("#angle").attr("fill", color);
+	$("#notAngle").attr("fill", color);
 }
 
 function determineColor(pie) {
