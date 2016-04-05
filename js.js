@@ -1,8 +1,8 @@
-var freqs = [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305];
+//var freqs = [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305];
 var notes = ["A", "A#/Bb", "B",     "C",     "C#/Db", "D",     "D#/Eb", "E",     "F",     "F#/Gb", "G",     "G#"];
-var scale = [0,200,400,500,700,900,1100];//major scale
+//var scale = [0,200,400,500,700,900,1100];//major scale
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var tonic = 440;
+//var tonic = 440;
 var cents = 0;
 var myInstrument;
 var assignment;
@@ -11,6 +11,8 @@ var slack = 10;
 var perfs=[];
 var user;
 var animationDelay = 0.1; //seconds between demo notes
+//[0,50,100,150,200,250,300, 350]
+//[0,200,400,500,700,900,1100, 1200] //major
 
 var smoother = [0,0,0,0,0,0,0,0,0,0];
 
@@ -18,7 +20,9 @@ var options = {
 		"clickable":[true,true,true,true,true,true,true],
 		"tonic":"random",
 		"temperament":"equal",
-		"A":440
+		"A":440,
+		"scale": [0,200,400,500,700,900,1100, 1200],
+		"freqs": [440, 466.164, 493.883, 523.252, 554.366, 293.665, 311.127, 329.628, 349.228, 369.994, 391.995, 415.305]
 	}; //click to hear which notes?
 
 $(function(){
@@ -89,8 +93,9 @@ $(function(){
 	        if(stats.detected){
 	        	//var pitch = constrainPitch();
 	        	$("#hz").html(stats.frequency);
-	        	var fraction = Math.log(stats.frequency/freqs[0])/Math.log(2)%1;
+	        	var fraction = Math.log(stats.frequency/options.freqs[0])/Math.log(2)%1;
 	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
+	        	cents = cents + 2400;
 	        	cents = cents%1200;
 	        	// var average = 0;
 	        	// for (var i = smoother.length - 1; i >= 0; i--) {
@@ -250,33 +255,37 @@ $(function(){
 function rotate(cents, temperament){
 	//destroying the unequal distnces between notes in a scale
 	//all notes are equidistant from eachother...!
+	var linearDegrees = (cents/options.scale[7])*360.0;
 	if(options.temperament == "equal"){
-		//todo: derive the note boundaries from the scale
-		var linearDegrees = (cents/1200)*360.0;
 		//$("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
 
 		//both offsets together
 		//you could also visual offset, then scale offset to avoid some jerkiness?
-		if(cents >= 100 && cents < 300){
+		if(cents >= (options.scale[0]+options.scale[1])/2 && cents < (options.scale[1]+options.scale[2])/2){
+			// console.log("linearDegrees: "+linearDegrees);
 			linearDegrees -= 7.5;
+			//should be 52
 			//$("#ballcircle").css("transform", "rotate("+linearDegrees+"deg)");
 		}
-		else if(cents >= 300 && cents < 450){
+		else if(cents >= (options.scale[1]+options.scale[2])/2 && cents < (options.scale[2]+options.scale[3])/2){
 			linearDegrees -= 16.5;
 		}
-		else if(cents >= 450 && cents < 600){
+		else if(cents >= (options.scale[2]+options.scale[3])/2 && cents < (options.scale[3]+options.scale[4])/2){
 			linearDegrees += 4.5;
 		}
-		else if(cents >= 600 && cents < 800){
+		else if(cents >= (options.scale[3]+options.scale[4])/2 && cents < (options.scale[4]+options.scale[5])/2){
 			linearDegrees -= 4.5;
 		}
-		else if(cents >= 800 && cents < 1000){
+		else if(cents >= (options.scale[4]+options.scale[5])/2 && cents < (options.scale[5]+options.scale[6])/2){
 			linearDegrees -= 13.5;
 		}
-		else if(cents >= 1000 && cents < 1150){
+		else if(cents >= (options.scale[5]+options.scale[6])/2 && cents < (options.scale[6]+options.scale[7])/2){
 			linearDegrees -= 22.5;
 		}
-		else $("#ballcircle").css("transform", "rotate("+((cents/1200)*360.0)+"deg)");
+		else $("#ballcircle").css("transform", "rotate("+((cents/options.scale[7])*360.0)+"deg)");
+		$("#ballcircle").css("transform", "rotate("+linearDegrees+"deg)");
+	}
+	if(options.temperament == "linear"){
 		$("#ballcircle").css("transform", "rotate("+linearDegrees+"deg)");
 	}
 }
@@ -326,38 +335,38 @@ function addEventListeners(options){
 	//this should probably be a for loop...
 	if(options.clickable[0]){
 		$("#one_in, #one_out").on('mousedown', function(e){
-			playNote(freqs[0]);
+			playNote(options.freqs[0]);
 		});
 	}
 	if(options.clickable[1]){
 		$("#two_in, #two_out").on('mousedown', function(e){
 			//console.log("play note 2");
-			playNote(freqs[2]);
+			playNote(options.freqs[1]);
 		});
 	}
 	if(options.clickable[2]){
 		$("#three_in, #three_out").on('mousedown', function(e){
-			playNote(freqs[4]);
+			playNote(options.freqs[2]);
 		});
 	}
 	if(options.clickable[3]){
 		$("#four_in, #four_out").on('mousedown', function(e){
-			playNote(freqs[5]);
+			playNote(options.freqs[3]);
 		});
 	}
 	if(options.clickable[4]){
 		$("#five_in, #five_out").on('mousedown', function(e){
-			playNote(freqs[7]);
+			playNote(options.freqs[4]);
 		});
 	}
 	if(options.clickable[5]){
 		$("#six_in, #six_out").on('mousedown', function(e){
-			playNote(freqs[9]);
+			playNote(options.freqs[5]);
 		});
 	}
 	if(options.clickable[6]){
 		$("#seven_in, #seven_out").on('mousedown', function(e){
-			playNote(freqs[11]);
+			playNote(options.freqs[6]);
 		});
 	}
 }
@@ -366,10 +375,13 @@ function makeTonic(){
 	var tonic = Math.round(Math.random()*12);
 	if(options.A > 219) options.A = options.A/4;
 	$("#tonic").html(tonic);
-	freqs[0] = options.A*Math.pow(2, tonic/12);
-	//todo: use scale
-	for (var i = 0; i < freqs.length; i++) {
-		freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
+	// freqs[0] = options.A*Math.pow(2, tonic/12);
+	// for (var i = 0; i < freqs.length; i++) {
+	// 	freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
+	// };
+	options.freqs = [];
+	for (var i = 0; i < options.scale.length-1; i++) {
+		options.freqs[i] = options.A*Math.pow(2, ((tonic*100)+options.scale[i])/1200);
 	};
 }
 
@@ -436,7 +448,7 @@ function demoAss(){
 	for (var i = 0; i < assignment.reqFrames.length; i++) {
 		//gotta make sure reqFrames and targets are synchronized
 		var duration = assignment.reqFrames[i]*detector.options.length/44100;//seconds of the note
-		playNote(freqs[i], duration, audioContext.currentTime+delay);
+		playNote(options.freqs[i], duration, audioContext.currentTime+delay);
 
 		animateAss((delay*1000), i);
 		delay += duration;
