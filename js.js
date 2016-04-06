@@ -17,7 +17,6 @@ var animationDelay = 0.1; //seconds between demo notes
 var smoother = [0,0,0,0,0,0,0,0,0,0];
 
 var options = {
-		"clickable":[true,true,true,true,true,true,true],
 		"tonic":"random",
 		"temperament":"equal",
 		"A":440,
@@ -502,6 +501,7 @@ function determineColor(pie) {
 var assignments = [
 	{
 		"targets" : [1,2,3,4,5,6,7],
+		"clickable":[true,true,true,true,true,true,true],
 		"viz":"scale-full",
 		"id":1,
 		"prompt":true,
@@ -510,6 +510,7 @@ var assignments = [
 	},
 	{
 		"targets" : [1,2,3,4,5],
+		"clickable":[true,false,false,false,false],
 		"viz":"scale-full",
 		"id":2,
 		"prompt":false,
@@ -518,6 +519,7 @@ var assignments = [
 	},
 	{
 		"targets" : [1,3,5],
+		"clickable":[true,true,true,true,false],
 		"viz":"scale-full",
 		"id":3,
 		"prompt":true,
