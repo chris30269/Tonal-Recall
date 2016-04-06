@@ -55,6 +55,22 @@ $(function(){
 					}
 				};
 			}
+			//event listeners
+			addEventListeners();
+
+			//make tonic
+			makeTonic();
+
+			//timbre
+			var instrument = Organ_2;
+			var real = new Float32Array(instrument.real.length);
+			var imag = new Float32Array(instrument.imag.length);
+			for (var i = 0; i < instrument.real.length; i++) {
+			  real[i] = instrument.real[i];
+			  imag[i] = instrument.imag[i];
+			}
+			myInstrument = audioContext.createPeriodicWave(real, imag);
+			
 			updateProgressBar();
 		});
 	}
@@ -235,21 +251,6 @@ $(function(){
 	    start: true // default: false
 	});
 
-	//event listeners
-	addEventListeners(options);
-
-	//make tonic
-	makeTonic();
-
-	//timbre
-	var instrument = Organ_2;
-	var real = new Float32Array(instrument.real.length);
-	var imag = new Float32Array(instrument.imag.length);
-	for (var i = 0; i < instrument.real.length; i++) {
-	  real[i] = instrument.real[i];
-	  imag[i] = instrument.imag[i];
-	}
-	myInstrument = audioContext.createPeriodicWave(real, imag);
 
 });
 
@@ -332,40 +333,40 @@ function playNote(which, duration, when){
 	osc2.stop(when+duration);
 }
 
-function addEventListeners(options){
+function addEventListeners(){
 	//this should probably be a for loop...
-	if(options.clickable[0]){
+	if(assignment.clickable[0]){
 		$("#one_in, #one_out").on('mousedown', function(e){
 			playNote(options.freqs[0]);
 		});
 	}
-	if(options.clickable[1]){
+	if(assignment.clickable[1]){
 		$("#two_in, #two_out").on('mousedown', function(e){
 			//console.log("play note 2");
 			playNote(options.freqs[1]);
 		});
 	}
-	if(options.clickable[2]){
+	if(assignment.clickable[2]){
 		$("#three_in, #three_out").on('mousedown', function(e){
 			playNote(options.freqs[2]);
 		});
 	}
-	if(options.clickable[3]){
+	if(assignment.clickable[3]){
 		$("#four_in, #four_out").on('mousedown', function(e){
 			playNote(options.freqs[3]);
 		});
 	}
-	if(options.clickable[4]){
+	if(assignment.clickable[4]){
 		$("#five_in, #five_out").on('mousedown', function(e){
 			playNote(options.freqs[4]);
 		});
 	}
-	if(options.clickable[5]){
+	if(assignment.clickable[5]){
 		$("#six_in, #six_out").on('mousedown', function(e){
 			playNote(options.freqs[5]);
 		});
 	}
-	if(options.clickable[6]){
+	if(assignment.clickable[6]){
 		$("#seven_in, #seven_out").on('mousedown', function(e){
 			playNote(options.freqs[6]);
 		});
