@@ -48,30 +48,14 @@ $(function(){
 				for (var i = perfs.length - 1; i >= 0; i--) {
 					temp.push(perfs[i].assignment);
 				};
+				var found = false;
 				for (var i = 0; i < assignments.length; i++) {
-					if(temp.indexOf(assignments[i].id) < 0){
+					if(temp.indexOf(assignments[i].id) < 0 && !found){
 						loadAssignment(assignments[i].id);
-						break;
+						found = true;
 					}
 				};
 			}
-			//event listeners
-			addEventListeners();
-
-			//make tonic
-			makeTonic();
-
-			//timbre
-			var instrument = Organ_2;
-			var real = new Float32Array(instrument.real.length);
-			var imag = new Float32Array(instrument.imag.length);
-			for (var i = 0; i < instrument.real.length; i++) {
-			  real[i] = instrument.real[i];
-			  imag[i] = instrument.imag[i];
-			}
-			myInstrument = audioContext.createPeriodicWave(real, imag);
-			
-			updateProgressBar();
 		});
 	}
 
@@ -335,38 +319,38 @@ function playNote(which, duration, when){
 
 function addEventListeners(){
 	//this should probably be a for loop...
-	if(assignment.clickable[0]){
+	if(assignment.clickable[0] || !assignment){
 		$("#one_in, #one_out").on('mousedown', function(e){
 			playNote(options.freqs[0]);
 		});
 	}
-	if(assignment.clickable[1]){
+	if(assignment.clickable[1] || !assignment){
 		$("#two_in, #two_out").on('mousedown', function(e){
 			//console.log("play note 2");
 			playNote(options.freqs[1]);
 		});
 	}
-	if(assignment.clickable[2]){
+	if(assignment.clickable[2] || !assignment){
 		$("#three_in, #three_out").on('mousedown', function(e){
 			playNote(options.freqs[2]);
 		});
 	}
-	if(assignment.clickable[3]){
+	if(assignment.clickable[3] || !assignment){
 		$("#four_in, #four_out").on('mousedown', function(e){
 			playNote(options.freqs[3]);
 		});
 	}
-	if(assignment.clickable[4]){
+	if(assignment.clickable[4] || !assignment){
 		$("#five_in, #five_out").on('mousedown', function(e){
 			playNote(options.freqs[4]);
 		});
 	}
-	if(assignment.clickable[5]){
+	if(assignment.clickable[5] || !assignment){
 		$("#six_in, #six_out").on('mousedown', function(e){
 			playNote(options.freqs[5]);
 		});
 	}
-	if(assignment.clickable[6]){
+	if(assignment.clickable[6] || !assignment){
 		$("#seven_in, #seven_out").on('mousedown', function(e){
 			playNote(options.freqs[6]);
 		});
@@ -389,12 +373,26 @@ function makeTonic(){
 }
 
 function loadAssignment(which){
+	//timbre
+	if(!myInstrument){
+		var instrument = Organ_2;
+		var real = new Float32Array(instrument.real.length);
+		var imag = new Float32Array(instrument.imag.length);
+		for (var i = 0; i < instrument.real.length; i++) {
+		  real[i] = instrument.real[i];
+		  imag[i] = instrument.imag[i];
+		}
+		myInstrument = audioContext.createPeriodicWave(real, imag);
+	}
+
+	//make a new tonic
+	makeTonic();
+
 	if(!assignAssignmnet(which)){
 		//free play
 		$("#ballcircle > path").first().attr("fill", "black");
 		$("#ballcircle > path").first().attr("stroke", "black");
 		$("#circle > path").attr("stroke", "black");
-		updateProgressBar();
 	}
 	else{
 		perf = {
@@ -423,14 +421,19 @@ function loadAssignment(which){
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
 		$(".progressDot").attr("stroke", "none");
 		$(".progressDot").attr("fill", "none");
-		//last one is 580, first one is 22
+		//last one is 28.65, first one is 763.35
 		for (var i = 0; i < assignment.targets.length; i++) {
-			$($(".progressDot").get(i)).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
+			$($(".progressDot").get(i)).attr("cy", -90+763.35-((i)*734.7/(assignment.targets.length-1))).attr("stroke", "black");
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
 		if(assignment.prompt) demoAss();
 	}
+
+	//event listeners
+	addEventListeners();
+	
+	updateProgressBar();
 }
 
 function animateAss(delay, j){
@@ -447,7 +450,7 @@ function demoAss(){
 	for (var i = 0; i < assignment.reqFrames.length; i++) {
 		//gotta make sure reqFrames and targets are synchronized
 		var duration = assignment.reqFrames[i]*detector.options.length/44100;//seconds of the note
-		playNote(options.freqs[i], duration, audioContext.currentTime+delay);
+		playNote(options.freqs[assignment.targets[i]-1], duration, audioContext.currentTime+delay);
 
 		animateAss((delay*1000), i);
 		delay += duration;
@@ -468,22 +471,25 @@ function assignAssignmnet(which){
 	else return true;
 }
 
-function updateProgressBar(){
-	var total = assignments.length;
-	var completed = [];
-	for (var i = perfs.length - 1; i >= 0; i--) {
-		if(perfs[i].progress.indexOf(false) < 0){
-			if(completed.indexOf(perfs[i].assignment) < 0){
-				completed.push(perfs[i].assignment);
+function updateProgressBar(percent){
+	if(!percent){
+		var total = assignments.length;
+		var completed = [];
+		for (var i = perfs.length - 1; i >= 0; i--) {
+			if(perfs[i].progress.indexOf(false) < 0){
+				if(completed.indexOf(perfs[i].assignment) < 0){
+					completed.push(perfs[i].assignment);
+				}
 			}
-		}
-	};
-	var percent = completed.length/total;
+		};
+		var percent = completed.length/total;
+		console.log("percent: "+percent);
+	}
 	//42px angle difference
-	//22 - 538
-	var change = 516/total;
-	$("#angle")[0].points.getItem(1).x = 42+22+(516*percent);
-	$("#angle")[0].points.getItem(2).x = 22+(516*percent);
+	//28.65 - 763.35 = 734.7
+	var change = 734.7/total;
+	$("#angle")[0].points.getItem(1).y = 734.7-90-42+22-(734.7*percent);
+	$("#angle")[0].points.getItem(2).y = 734.7-90+22-(734.7*percent);
 	var color = "hsl("+(percent*360)+","+100+"%,"+50+"%)";
 	$("#angle").attr("fill", color);
 	$("#notAngle").attr("fill", color);
