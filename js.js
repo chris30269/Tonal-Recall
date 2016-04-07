@@ -302,6 +302,37 @@ function mode(array){
 function playNote(which, duration, when){
 	if (!duration) duration = 0.5;
 	if(!when) when = audioContext.currentTime;
+	// var osc = audioContext.createOscillator();
+	// osc.connect(audioContext.destination);
+	// // osc.setPeriodicWave(myInstrument);
+	// osc.type = 'sawtooth';
+	// osc.frequency.value = which*2;
+	// osc.start(when);
+	// osc.stop(when+duration);
+	// console.log("generating: "+which);
+	// var osc2 = audioContext.createOscillator();
+	// osc2.connect(audioContext.destination);
+	// osc2.setPeriodicWave(myInstrument);
+	// osc2.frequency.value = which*2;
+	// osc2.start();
+	// osc2.stop(audioContext.currentTime+0.5);
+
+	// var osc2 = audioContext.createOscillator();
+	// osc2.connect(audioContext.destination);
+	// // osc2.setPeriodicWave(myInstrument);
+	// osc2.type = 'sine';
+	// osc2.frequency.value = which;
+	// osc2.start(when);
+	// osc2.stop(when+duration);
+
+	// var osc3 = audioContext.createOscillator();
+	// osc3.connect(audioContext.destination);
+	// // osc2.setPeriodicWave(myInstrument);
+	// osc3.type = 'square';
+	// osc3.frequency.value = which*4;
+	// osc3.start(when);
+	// osc3.stop(when+duration);
+
 	var osc = audioContext.createOscillator();
 	osc.connect(audioContext.destination);
 	osc.setPeriodicWave(myInstrument);
@@ -397,7 +428,7 @@ function makeTonic(){
 function loadAssignment(which){
 	//timbre
 	if(!myInstrument){
-		var instrument = Buzzy_1;
+		var instrument = Organ_2;
 		var real = new Float32Array(instrument.real.length);
 		var imag = new Float32Array(instrument.imag.length);
 		for (var i = 0; i < instrument.real.length; i++) {
