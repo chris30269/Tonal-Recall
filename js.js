@@ -101,8 +101,10 @@ $(function(){
 		        	$("#hz").html(stats.frequency);
 		        	var fraction = Math.log(stats.frequency/options.freqs[0])/Math.log(2)%1;
 		        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
-		        	cents = cents + 2400;
-		        	cents = cents%1200;
+		        	if(assignment.targets[perf.progress.indexOf(false)] != 1){
+		        		cents = cents + 2400;
+			        	cents = cents%1200;
+			        }
 		        	// var average = 0;
 		        	// for (var i = smoother.length - 1; i >= 0; i--) {
 		        	// 	average += smoother[i];
@@ -607,10 +609,14 @@ function makeMenu(){
 		});
 	};
 
-	$(".menuDot").eq(assignment.id-1).css("background-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)").addClass("clickable");
-	$(".menuDot").eq(assignment.id-1).css("border-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)");
+	// $(".menuDot").eq(assignment.id-1).css("background-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)").addClass("clickable");
+	$(".menuDot").eq(assignment.id-1).css("border-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)").addClass("clickable");
+	$(".menuDot").eq(assignment.id-1).on("click",function(event){
+		var which = $(event.target).data("which");
+		loadAssignment(which);
+	});
 
-	if(highestCompleted > 0){
+	if(highestCompleted > 0 && highestCompleted+1 != assignment.id){
 		$(".menuDot").eq(highestCompleted).css("background-color", "transparent").addClass("clickable");
 		$(".menuDot").eq(highestCompleted).css("border-color", "hsl( "+(1+highestCompleted)/assignments.length*360+",100%,50%)");
 		$(".menuDot").eq(highestCompleted).on("click", function(){
