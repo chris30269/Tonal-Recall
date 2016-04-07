@@ -397,7 +397,7 @@ function makeTonic(){
 function loadAssignment(which){
 	//timbre
 	if(!myInstrument){
-		var instrument = Organ_2;
+		var instrument = Buzzy_1;
 		var real = new Float32Array(instrument.real.length);
 		var imag = new Float32Array(instrument.imag.length);
 		for (var i = 0; i < instrument.real.length; i++) {
@@ -550,6 +550,7 @@ function getCompletedAssignments(){
 }
 
 function makeMenu(){
+	var beginnings = [1, 14, 36, 58, 80, 84, 88, 92, 105, 106]; //start these on a new line
 	var completed = getCompletedAssignments();
 	completed.sort(function(a, b){return a-b});
 	var highestCompleted = 0;
@@ -557,16 +558,20 @@ function makeMenu(){
 		if(highestCompleted < completed[i]) highestCompleted = completed[i];
 	};
 	$("#menu").html("");
-	$("#menu").append('<div id="consent" class="clickable"></div>');
+	var string = '<div class="menuSection"><div id="consent" class="clickable"></div>';
 	for (var i = 0; i < assignments.length; i++) {
-		$("#menu").append('<div class="menuDot"></div>');
+		if(beginnings.indexOf(i+1) > -1) string += '</div><div class="menuSection">';
+		string += '<div class="menuDot" data-which="'+(i+1)+'"></div>';
 	};
-	$("#menu").append('<div id="survey" class="clickable"></div>');
+	string += '</div>';
+	$("#menu").append(string);
+	$("#menu").append('<div class="menuSection"><div id="survey" class="clickable"></div></div>');
+	$("#menu").append('<div class="menuSection"><div id="stats" class="clickable"></div></div>');
 	for (var i = 0; i < completed.length; i++) {
 		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
 		$(".menuDot").eq(completed[i]-1).on("click",function(event){
-			var which = $(event.target).index();
+			var which = $(event.target).data("which");
 			loadAssignment(which);
 		});
 	};
@@ -586,6 +591,9 @@ function makeMenu(){
 	});
 	$("#survey").on("click", function(){
 			window.location.href = "survey.html";
+	});
+	$("#stats").on("click", function(){
+			window.location.href = "stats.html";
 	});
 }
 

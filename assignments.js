@@ -75,21 +75,21 @@ var assignments = [
 		"targets" : [2,2,2,1,5,5],
 		"reqFrames":[20,20,40,20,20,40],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	},
 	{
 		"id":12,
 		"targets" : [3,2,1,2,3,3,3,3],
 		"reqFrames":[20,20,20,20,20,20,20, 20],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	},
 	{
 		"id":13,
 		"targets" : [2,2,3,2,1],
 		"reqFrames":[20,20,20,20,80],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	},
 
 	{
@@ -720,20 +720,20 @@ var assignments = [
 		"targets" : [2,2,2,1,5,5],
 		"reqFrames":[20,20,40,20,20,40],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	},
 	{
 		"id":103,
 		"targets" : [3,2,1,2,3,3,3,3],
 		"reqFrames":[20,20,20,20,20,20,20, 20],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	},
 	{
 		"id":104,
 		"targets" : [2,2,3,2,1],
 		"reqFrames":[20,20,20,20,80],
 		"clickable":[true],
-		"prompt":"tonic"
+		"prompt":"none"
 	}	
 ];

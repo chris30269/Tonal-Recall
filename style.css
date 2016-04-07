@@ -83,8 +83,13 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: 13px;
+	margin: .5vw;
 	flex: 0 0 auto;
+}
+.menuSection{
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
 }
 #survey{
 	max-width: 56px;
@@ -93,7 +98,7 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: 13px;
+	margin: .5vw;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
@@ -104,13 +109,25 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: 13px;
+	margin: .5vw;
+	flex: 0 0 auto;
+	background-color: hsl(0,100%,50%);
+}
+#stats{
+	max-width: 56px;
+	max-height: 56px;
+	width: 2vw;
+	height: 2vw;
+	box-sizing: border-box;
+	border: 2px solid black;
+	margin: .5vw;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
 .clickable{
 	cursor: pointer;
 }
+
 
 /*.scale-full-1{
 	stop-color:red;
