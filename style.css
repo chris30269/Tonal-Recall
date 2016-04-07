@@ -77,27 +77,33 @@ html{
 }
 .menuDot{
 	border-radius: 50%;
-	width: 56px;
-	height: 56px;
+	max-width: 56px;
+	max-height: 56px;
+	width: 2vw;
+	height: 2vw;
 	box-sizing: border-box;
-	border: 4px solid black;
+	border: 2px solid black;
 	margin: 13px;
 	flex: 0 0 auto;
 }
 #survey{
-	width: 56px;
-	height: 56px;
+	max-width: 56px;
+	max-height: 56px;
+	width: 2vw;
+	height: 2vw;
 	box-sizing: border-box;
-	border: 4px solid black;
+	border: 2px solid black;
 	margin: 13px;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
 #consent{
-	width: 56px;
-	height: 56px;
+	max-width: 56px;
+	max-height: 56px;
+	width: 2vw;
+	height: 2vw;
 	box-sizing: border-box;
-	border: 4px solid black;
+	border: 2px solid black;
 	margin: 13px;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
