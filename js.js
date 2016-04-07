@@ -455,7 +455,8 @@ function loadAssignment(which){
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
-		if(assignment.prompt) demoAss();
+		if(assignment.prompt == "full") demoAss();
+		else if(assignment.prompt == "tonic") playNote(options.freqs[0]);
 	}
 
 	//event listeners
@@ -574,7 +575,7 @@ var assignments = [
 		"clickable":[true,true,true,true,true,true,true],
 		"viz":"scale-full",
 		"id":1,
-		"prompt":true,
+		"prompt":"full",
 		"reqFrames":[20,20,20,20,20,20,20],
 		"color": [0,100,50]
 	},
@@ -583,7 +584,7 @@ var assignments = [
 		"clickable":[true,false,false,false,false],
 		"viz":"scale-full",
 		"id":2,
-		"prompt":false,
+		"prompt":"tonic",
 		"reqFrames":[40,20,20,20,40],
 		"color": [310,100,50]
 	},
@@ -592,7 +593,7 @@ var assignments = [
 		"clickable":[true,true,true,true,false],
 		"viz":"scale-full",
 		"id":3,
-		"prompt":true,
+		"prompt":"full",
 		"reqFrames":[20,20,20],
 		"color": [250,100,50]
 	},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
