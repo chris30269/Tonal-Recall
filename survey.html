@@ -1,5 +1,6 @@
 <html>
 <head>
+	<title>Tonal Recall Survey</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<style type="text/css">
 		#container{
@@ -41,8 +42,9 @@
 <body>
 	<div id="container">
 		<p>Thank you for participating in this research study!</p>
-		<p>This survey is 17 questions, but should take less than 5 minutes to complete.</p>
+		<p>This survey is 17 questions, but should take less than 5 minutes to complete and is very valuable for this research project!</p>
 		<p>All questions are optional, and you can change your answers at any time by coming back to this page.</p>
+		<p>After saving, you will be redirected back to the main page.</p>
 		<hr>
 		<p class="question">1. I already had a good sense of tonality, before using this system.</p>
 		<table>
@@ -427,6 +429,8 @@
 		<input name="question17" type="text" style="width:50%;">
 
 		<br>
+		<p>After saving, you will be redirected back to the main page.</p>
+		<p>You can come back here and change you answers anytime.</p>
 		<button>Save</button>
 	</div>
 </body>
@@ -434,7 +438,7 @@
 	$("button").first().on("click", function(){
 		var selected = $("input:checked");
 		var temp=[];
-		for (var i = 0; i < selected.length; i++) {
+		for(var i = 0; i < selected.length; i++) {
 			//temp[selected[i].name] = selected[i].value;
 			var t = {};
 			t[selected[i].name] = selected[i].value;
@@ -456,6 +460,7 @@
 		console.log(JSON.stringify(responses));
 		$.post( "php/survey.php", {"action":"save", "userId":localStorage.getItem("userId"), "responses":JSON.stringify(responses)}, function(data) {
 			console.log(data);
+			window.location.href = "index.html";
 		});
 	});
 
@@ -469,8 +474,9 @@
 				if(question != "question3") $("#"+question+answer).attr("checked", "checked");
 				if(question == "question3") $("input[name=question3]").val(answer);
 			};
-			for (var i = 0; i < survey.followups.length; i++) {
-				$($("textarea").get(i)).val(survey.followups[i][Object.keys(survey.followups[i])[0]]);
+
+			for(var i = 0; i < survey.followups.length; i++){
+				$("textarea").eq(i).val(survey.followups[i][Object.keys(survey.followups[i])[0]]);
 			};
 		});
 	});

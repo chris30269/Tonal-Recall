@@ -413,6 +413,7 @@ function loadAssignment(which){
 	$("#circle > path").attr("fill", "none");
 
 	if(!assignAssignmnet(which)){
+		window.location.href = "survey.html";
 		//free play
 		$("#ballcircle > path").first().attr("fill", "black");
 		$("#ballcircle > path").first().attr("stroke", "black");
@@ -552,9 +553,11 @@ function makeMenu(){
 		if(highestCompleted < completed[i]) highestCompleted = completed[i];
 	};
 	$("#menu").html("");
+	$("#menu").append('<div id="consent" class="clickable"></div>');
 	for (var i = 0; i < assignments.length; i++) {
 		$("#menu").append('<div class="menuDot"></div>');
 	};
+	$("#menu").append('<div id="survey" class="clickable"></div>');
 	for (var i = 0; i < completed.length; i++) {
 		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
@@ -574,6 +577,12 @@ function makeMenu(){
 			loadAssignment(highestCompleted+1);
 		});
 	}
+	$("#consent").on("click", function(){
+			window.location.href = "consent.html";
+	});
+	$("#survey").on("click", function(){
+			window.location.href = "survey.html";
+	});
 }
 
 // var assignments = [
