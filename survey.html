@@ -460,7 +460,7 @@
 		console.log(JSON.stringify(responses));
 		$.post( "php/survey.php", {"action":"save", "userId":localStorage.getItem("userId"), "responses":JSON.stringify(responses)}, function(data) {
 			console.log(data);
-			window.location.href = "index.html";
+			window.location.href = "/";
 		});
 	});
 
