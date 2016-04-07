@@ -166,7 +166,6 @@ $(function(){
 								$("#circle > path").removeClass("transparent");
 								perf.finished = Math.round(Date.now()/1000);
 								perfs.push(perf);
-								updateProgressBar();
 								$(".progressDot").attr("stroke", "none");
 								$(".progressDot").attr("fill", "none");
 								//go to new assignment
@@ -432,8 +431,6 @@ function loadAssignment(which){
 
 	//event listeners
 	addEventListeners();
-	
-	updateProgressBar();
 }
 
 function animateAss(delay, j){
@@ -474,16 +471,8 @@ function assignAssignmnet(which){
 function updateProgressBar(percent){
 	if(!percent){
 		var total = assignments.length;
-		var completed = [];
-		for (var i = perfs.length - 1; i >= 0; i--) {
-			if(perfs[i].progress.indexOf(false) < 0){
-				if(completed.indexOf(perfs[i].assignment) < 0){
-					completed.push(perfs[i].assignment);
-				}
-			}
-		};
+		var completed = getCompletedAssignments();
 		var percent = completed.length/total;
-		console.log("percent: "+percent);
 	}
 	//42px angle difference
 	//28.65 - 763.35 = 734.7
@@ -493,6 +482,8 @@ function updateProgressBar(percent){
 	var color = "hsl("+(percent*360)+","+100+"%,"+50+"%)";
 	$("#angle").attr("fill", color);
 	$("#notAngle").attr("fill", color);
+
+	makeMenu();
 }
 
 function determineColor(pie) {
@@ -503,6 +494,43 @@ function determineColor(pie) {
 	if(pie == 5) return "hsl("+options.colors[4]+","+100+"%,"+50+"%)";
 	if(pie == 6) return "hsl("+options.colors[5]+","+100+"%,"+50+"%)";
 	if(pie == 7) return "hsl("+options.colors[6]+","+100+"%,"+50+"%)";
+}
+
+function getCompletedAssignments(){
+	var completed = [];
+	for (var i = perfs.length - 1; i >= 0; i--) {
+		if(perfs[i].progress.indexOf(false) < 0){
+			if(completed.indexOf(perfs[i].assignment) < 0){
+				completed.push(perfs[i].assignment);
+			}
+		}
+	};
+	return completed;
+}
+
+function makeMenu(){
+	var completed = getCompletedAssignments();
+	var highestCompleted = 0;
+	for (var i = 0; i < completed.length; i++) {
+		if(highestCompleted < completed[i]) highestCompleted = completed[i];
+	};
+	$("#menu").html("");
+	for (var i = 0; i < assignments.length; i++) {
+		$("#menu").append('<div class="menuDot"></div>');
+	};
+	for (var i = 0; i < completed.length; i++) {
+		$(".menuDot").eq(i).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)");
+		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
+		$(".menuDot").eq(i).on("click",function(event){
+			var which = $(event.target).index()+1;
+			loadAssignment(which);
+		});
+	};
+	$(".menuDot").eq(highestCompleted).css("background-color", "transparent");
+	$(".menuDot").eq(highestCompleted).css("border-color", "hsl( "+assignment.id/assignments.length*360+",100%,50%)");
+	$(".menuDot").eq(highestCompleted).on("click", function(){
+		loadAssignment(assignment.id);
+	});
 }
 
 var assignments = [
@@ -532,5 +560,5 @@ var assignments = [
 		"prompt":true,
 		"reqFrames":[20,20,20],
 		"color": [250,100,50]
-	}
+	},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
 ];

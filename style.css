@@ -17,12 +17,14 @@ html{
 	flex-grow: 1;
 	display: flex;
 	justify-content: center;
+	max-width: 12.4vw;
 }
 #left{
 	/*background-color: darkgrey;*/
 	flex-grow: 1;
 	display: flex;
 	justify-content: center;
+	max-width: 12.4vw;
 }
 #middle{
 	/*flex-grow: 4;*/
@@ -30,8 +32,9 @@ html{
 	justify-content: center;
 }
 #right{
-	background-color: lightgrey;
+	/*background-color: lightgrey;*/
 	flex-grow: 2;
+	max-width: 25vw;
 }
 #ballcircle{
 	transform-origin: 50% 50%;
@@ -62,6 +65,23 @@ html{
 	transition: transform 100ms;
 	transition-timing-function: ease-out;
 	transform: scale(0);
+}
+
+#menu{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+.menuDot{
+	border-radius: 50%;
+	width: 56px;
+	height: 56px;
+	box-sizing: border-box;
+	border: 4px solid black;
+	margin: 13px;
+	flex: 0 0 auto;
+
 }
 
 /*.scale-full-1{
