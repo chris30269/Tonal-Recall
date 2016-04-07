@@ -318,41 +318,56 @@ function playNote(which, duration, when){
 
 function addEventListeners(){
 	//this should probably be a for loop...
+	$("#one_in, #one_out").removeClass("clickable");
+	$("#two_in, #two_out").removeClass("clickable");
+	$("#three_in, #three_out").removeClass("clickable");
+	$("#four_in, #four_out").removeClass("clickable");
+	$("#five_in, #five_out").removeClass("clickable");
+	$("#six_in, #six_out").removeClass("clickable");
+	$("#seven_in, #seven_out").removeClass("clickable");
+
 	if(assignment.clickable[0] || !assignment){
 		$("#one_in, #one_out").on('mousedown', function(e){
 			playNote(options.freqs[0]);
 		});
+		$("#one_in, #one_out").addClass("clickable");
 	}
 	if(assignment.clickable[1] || !assignment){
 		$("#two_in, #two_out").on('mousedown', function(e){
 			//console.log("play note 2");
 			playNote(options.freqs[1]);
 		});
+		$("#two_in, #two_out").addClass("clickable");
 	}
 	if(assignment.clickable[2] || !assignment){
 		$("#three_in, #three_out").on('mousedown', function(e){
 			playNote(options.freqs[2]);
 		});
+		$("#three_in, #three_out").addClass("clickable");
 	}
 	if(assignment.clickable[3] || !assignment){
 		$("#four_in, #four_out").on('mousedown', function(e){
 			playNote(options.freqs[3]);
 		});
+		$("#four_in, #four_out").addClass("clickable");
 	}
 	if(assignment.clickable[4] || !assignment){
 		$("#five_in, #five_out").on('mousedown', function(e){
 			playNote(options.freqs[4]);
 		});
+		$("#five_in, #five_out").addClass("clickable");
 	}
 	if(assignment.clickable[5] || !assignment){
 		$("#six_in, #six_out").on('mousedown', function(e){
 			playNote(options.freqs[5]);
 		});
+		$("#six_in, #six_out").addClass("clickable");
 	}
 	if(assignment.clickable[6] || !assignment){
 		$("#seven_in, #seven_out").on('mousedown', function(e){
 			playNote(options.freqs[6]);
 		});
+		$("#seven_in, #seven_out").addClass("clickable");
 	}
 }
 
@@ -423,9 +438,9 @@ function loadAssignment(which){
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
 		$(".progressDot").attr("stroke", "none");
 		$(".progressDot").attr("fill", "none");
-		//last one is 28.65, first one is 763.35
+		//last one is 580, first one is 22
 		for (var i = 0; i < assignment.targets.length; i++) {
-			$($(".progressDot").get(i)).attr("cy", -90+763.35-((i)*734.7/(assignment.targets.length-1))).attr("stroke", "black");
+			$($(".progressDot").get(i)).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
@@ -472,19 +487,19 @@ function assignAssignmnet(which){
 }
 
 function updateProgressBar(percent){
-	if(!percent){
-		var total = assignments.length;
-		var completed = getCompletedAssignments();
-		var percent = completed.length/total;
-	}
-	//42px angle difference
-	//28.65 - 763.35 = 734.7
-	var change = 734.7/total;
-	$("#angle")[0].points.getItem(1).y = 734.7-90-42+22-(734.7*percent);
-	$("#angle")[0].points.getItem(2).y = 734.7-90+22-(734.7*percent);
-	var color = "hsl("+(percent*360)+","+100+"%,"+50+"%)";
-	$("#angle").attr("fill", color);
-	$("#notAngle").attr("fill", color);
+	// if(!percent){
+	// 	var total = assignments.length;
+	// 	var completed = getCompletedAssignments();
+	// 	var percent = completed.length/total;
+	// }
+	// //42px angle difference
+	// //28.65 - 763.35 = 734.7
+	// var change = 734.7/total;
+	// $("#angle")[0].points.getItem(1).y = 734.7-90-42+22-(734.7*percent);
+	// $("#angle")[0].points.getItem(2).y = 734.7-90+22-(734.7*percent);
+	// var color = "hsl("+(percent*360)+","+100+"%,"+50+"%)";
+	// $("#angle").attr("fill", color);
+	// $("#notAngle").attr("fill", color);
 
 	makeMenu();
 }
@@ -522,7 +537,7 @@ function makeMenu(){
 		$("#menu").append('<div class="menuDot"></div>');
 	};
 	for (var i = 0; i < completed.length; i++) {
-		$(".menuDot").eq(i).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)");
+		$(".menuDot").eq(i).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
 		$(".menuDot").eq(i).on("click",function(event){
 			var which = $(event.target).index()+1;
@@ -530,11 +545,11 @@ function makeMenu(){
 		});
 	};
 
-	$(".menuDot").eq(assignment.id-1).css("background-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)");
+	$(".menuDot").eq(assignment.id-1).css("background-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)").addClass("clickable");
 	$(".menuDot").eq(assignment.id-1).css("border-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)");
 
 	if(highestCompleted > 0){
-		$(".menuDot").eq(highestCompleted).css("background-color", "transparent");
+		$(".menuDot").eq(highestCompleted).css("background-color", "transparent").addClass("clickable");
 		$(".menuDot").eq(highestCompleted).css("border-color", "hsl( "+(1+highestCompleted)/assignments.length*360+",100%,50%)");
 		$(".menuDot").eq(highestCompleted).on("click", function(){
 			loadAssignment(highestCompleted+1);

@@ -12,29 +12,24 @@ html{
 	align-content: center;
 
 }
-#leftest{
+#left{
 	/*background-color: lightgrey;*/
 	flex-grow: 1;
+	flex-shrink: 1;
 	display: flex;
-	justify-content: center;
-	max-width: 12.4vw;
-}
-#left{
-	/*background-color: darkgrey;*/
-	flex-grow: 1;
-	display: flex;
-	justify-content: center;
-	max-width: 12.4vw;
+	justify-content: space-around;
+	align-items: center;
+	max-width: 40vw;
+	height: 100vh;
 }
 #middle{
-	/*flex-grow: 4;*/
-	display: flex;
-	justify-content: center;
-}
-#right{
-	/*background-color: lightgrey;*/
 	flex-grow: 2;
-	max-width: 25vw;
+	flex-shrink: 2;
+	display: flex;
+	/*justify-content: center;*/
+	flex-direction: column;
+	align-items: center;
+	/*background-color: darkgrey;*/
 }
 #ballcircle{
 	transform-origin: 50% 50%;
@@ -44,7 +39,10 @@ html{
 #viz{
 	/*height: 86vh;
 	width: 45vw;*/
-	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 #bar{
 	/*background-color: lightgrey;*/
@@ -52,6 +50,10 @@ html{
 	width: 45vw;*/
 	/*transform: rotate(270deg);*/
 	/*height: 100%;*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 70%;
 }
 
 .pie{
@@ -81,7 +83,9 @@ html{
 	border: 4px solid black;
 	margin: 13px;
 	flex: 0 0 auto;
-
+}
+.clickable{
+	cursor: pointer;
 }
 
 /*.scale-full-1{
