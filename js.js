@@ -26,37 +26,42 @@ var options = {
 	}; //click to hear which notes?
 
 $(function(){
-
-	//check if user yet
-	user = localStorage.getItem("userId");
-	if(!user){
-		console.log("You're not a user yet");
-		//get consent
-		window.location.href = "consent.html";
+	//check if they have technology
+	if(!audioContext || !(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia)){
+		alert("Looks like you're using a browser I don't support. Sorry about that. Feel free to poke around anyway.");
 	}
 	else{
-		//get their most recent data
-		console.log("you are user: "+user);
-		$.post( "php/returning.php", {"userId":user}, function(data) {
-			//figure out where they are
-			var temp = [];
-			if(data == "new" || data == ""){
-				loadAssignment(1);
-			}
-			else{
-				perfs = JSON.parse(data);
-				for (var i = perfs.length - 1; i >= 0; i--) {
-					temp.push(perfs[i].assignment);
-				};
-				var found = false;
-				for (var i = 0; i < assignments.length; i++) {
-					if(temp.indexOf(assignments[i].id) < 0 && !found){
-						loadAssignment(assignments[i].id);
-						found = true;
-					}
-				};
-			}
-		});
+		//check if user yet
+		user = localStorage.getItem("userId");
+		if(!user){
+			console.log("You're not a user yet");
+			//get consent
+			window.location.href = "consent.html";
+		}
+		else{
+			//get their most recent data
+			console.log("you are user: "+user);
+			$.post( "php/returning.php", {"userId":user}, function(data) {
+				//figure out where they are
+				var temp = [];
+				if(data == "new" || data == ""){
+					loadAssignment(1);
+				}
+				else{
+					perfs = JSON.parse(data);
+					for (var i = perfs.length - 1; i >= 0; i--) {
+						temp.push(perfs[i].assignment);
+					};
+					var found = false;
+					for (var i = 0; i < assignments.length; i++) {
+						if(temp.indexOf(assignments[i].id) < 0 && !found){
+							loadAssignment(assignments[i].id);
+							found = true;
+						}
+					};
+				}
+			});
+		}
 	}
 
 	detector = new PitchDetector({
