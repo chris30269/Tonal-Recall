@@ -387,6 +387,8 @@ function loadAssignment(which){
 	//make a new tonic
 	makeTonic();
 
+	$("#circle > path").attr("fill", "none");
+
 	if(!assignAssignmnet(which)){
 		//free play
 		$("#ballcircle > path").first().attr("fill", "black");
@@ -416,6 +418,7 @@ function loadAssignment(which){
 		$("#ballcircle > path").first().attr("fill", color);
 		$("#circle > path").first().attr("fill", color);
 		$($("#circle > path").get(1)).attr("fill", color);
+		$("#circle > path").removeClass("transparent");
 		$("use#use1").attr("xlink:href", "#"+$("#circle > path").first().attr("id"));
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
 		$(".progressDot").attr("stroke", "none");
@@ -526,11 +529,17 @@ function makeMenu(){
 			loadAssignment(which);
 		});
 	};
-	$(".menuDot").eq(highestCompleted).css("background-color", "transparent");
-	$(".menuDot").eq(highestCompleted).css("border-color", "hsl( "+assignment.id/assignments.length*360+",100%,50%)");
-	$(".menuDot").eq(highestCompleted).on("click", function(){
-		loadAssignment(assignment.id);
-	});
+
+	$(".menuDot").eq(assignment.id-1).css("background-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)");
+	$(".menuDot").eq(assignment.id-1).css("border-color", "hsl( "+(assignment.id)/assignments.length*360+",100%,50%)");
+
+	if(highestCompleted > 0){
+		$(".menuDot").eq(highestCompleted).css("background-color", "transparent");
+		$(".menuDot").eq(highestCompleted).css("border-color", "hsl( "+(1+highestCompleted)/assignments.length*360+",100%,50%)");
+		$(".menuDot").eq(highestCompleted).on("click", function(){
+			loadAssignment(highestCompleted+1);
+		});
+	}
 }
 
 var assignments = [
