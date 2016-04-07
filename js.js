@@ -146,21 +146,18 @@ $(function(){
 								var color = $($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke");
 								$($(".progressDot").get(perf.progress.indexOf(false))).attr("fill", color);
 								$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", "black");
-								if(assignment.targets.length > 3){
-									var color = determineColor(1+(piece2/2));
-								}
-								else{
-									var color = determineColor(1+(piece2/2));
-								}
 
 								//moving on
+								var color = determineColor(assignment.targets[perf.progress.indexOf(false)+1]);
 								perf.correctFrames = 0;
 								perf.progress[perf.progress.indexOf(false)] = true;
 		         				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
 								var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
+								$($("#circle > path").get(piece1-1)).removeClass("transparent");
+								$($("#circle > path").get(piece2-1)).removeClass("transparent");
 								$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", color);
 								$("#ballcircle > path").first().attr("fill", color);
-		         				window.setTimeout(function(){if(perf.progress.indexOf(false) != 0) $("#progress").attr("fill", color);}, 100)
+		         				window.setTimeout(function(){if(perf.progress.indexOf(false) != 0) $("#progress").attr("fill", color);}, 100);
 		         				$("#progress").css("transform", "scale(0)");
 		         				$($("#circle > path").get(piece1-1)).attr("fill", color);
 								$($("#circle > path").get(piece2-1)).attr("fill", color);
@@ -438,12 +435,12 @@ function loadAssignment(which){
 			perf.attempts[i] = [];
 		};
 
-		var color = "hsl("+options.colors[0]+","+100+"%,"+50+"%)";
+		var color = "hsl("+options.colors[assignment.targets[0]]+","+100+"%,"+50+"%)";
 		$("#progress").attr("fill", color);
 		$("#progress").css("transform", "scale(0)");
 		$("#ballcircle > path").first().attr("fill", color);
-		$("#circle > path").first().attr("fill", color);
-		$($("#circle > path").get(1)).attr("fill", color);
+		$("#circle > path").eq(((assignment.targets[0]-1)*2)).attr("fill", color);
+		$("#circle > path").eq(((assignment.targets[0]-1)*2)+1).attr("fill", color);
 		$("#circle > path").removeClass("transparent");
 		$("use#use1").attr("xlink:href", "#"+$("#circle > path").first().attr("id"));
 		$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get(1)).attr("id"));
@@ -451,12 +448,12 @@ function loadAssignment(which){
 		$(".progressDot").attr("fill", "none");
 		//last one is 580, first one is 22
 		for (var i = 0; i < assignment.targets.length; i++) {
-			$($(".progressDot").get(i)).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
+			if(assignment.targets.length == 1) $(".progressDot").eq(i).attr("cx", 22+((i)*558/(assignment.targets.length))).attr("stroke", "black");
+			else $(".progressDot").eq(i).attr("cx", 22+((i)*558/(assignment.targets.length-1))).attr("stroke", "black");
 		};
 		$($(".progressDot").get(0)).attr("stroke", color);
 		updateProgressBar();
-		if(assignment.prompt == "full") demoAss();
-		else if(assignment.prompt == "tonic") playNote(options.freqs[0]);
+		demoAss(assignment.prompt);
 	}
 
 	//event listeners
@@ -472,18 +469,26 @@ function deAnimateAss(delay, j){
 	window.setTimeout(function(){$($("#circle > path").get(((assignment.targets[j]*2))-1)).attr("stroke", "black");}, delay);
 }
 
-function demoAss(){
-	var delay = 0;
-	for (var i = 0; i < assignment.reqFrames.length; i++) {
-		//gotta make sure reqFrames and targets are synchronized
-		var duration = assignment.reqFrames[i]*detector.options.length/44100;//seconds of the note
-		playNote(options.freqs[assignment.targets[i]-1], duration, audioContext.currentTime+delay);
+function demoAss(twe){
+	if(twe == "full"){
+		var delay = 0;
+		for (var i = 0; i < assignment.reqFrames.length; i++) {
+			//gotta make sure reqFrames and targets are synchronized
+			var duration = assignment.reqFrames[i]*detector.options.length/44100;//seconds of the note
+			playNote(options.freqs[assignment.targets[i]-1], duration, audioContext.currentTime+delay);
 
-		animateAss((delay*1000), i);
-		delay += duration;
-		deAnimateAss((1000*delay), i);
-		delay += animationDelay;
-	};
+			animateAss((delay*1000), i);
+			delay += duration;
+			deAnimateAss((1000*delay), i);
+			delay += animationDelay;
+		};
+	}
+	if(twe == "tonic"){
+		var duration = assignment.reqFrames[0]*detector.options.length/44100;//seconds of the note
+		playNote(options.freqs[0], duration, audioContext.currentTime+delay);
+		window.setTimeout(function(){$("#circle > path").eq(0).attr("stroke", determineColor(1));$("use#use1").attr("xlink:href", "#"+$("#circle > path").eq(0).attr("id"));}, 0);
+		window.setTimeout(function(){$("#circle > path").eq(1).attr("stroke", determineColor(1));$("use#use2").attr("xlink:href", "#"+$("#circle > path").eq(1).attr("id"));}, 0);
+	}
 }
 
 function assignAssignmnet(which){
@@ -517,6 +522,7 @@ function updateProgressBar(percent){
 }
 
 function determineColor(pie) {
+	if(pie > 7) pie = pie%7;
 	if(pie == 1) return "hsl("+options.colors[0]+","+100+"%,"+50+"%)";
 	if(pie == 2) return "hsl("+options.colors[1]+","+100+"%,"+50+"%)";
 	if(pie == 3) return "hsl("+options.colors[2]+","+100+"%,"+50+"%)";
@@ -540,6 +546,7 @@ function getCompletedAssignments(){
 
 function makeMenu(){
 	var completed = getCompletedAssignments();
+	completed.sort(function(a, b){return a-b});
 	var highestCompleted = 0;
 	for (var i = 0; i < completed.length; i++) {
 		if(highestCompleted < completed[i]) highestCompleted = completed[i];
@@ -549,9 +556,9 @@ function makeMenu(){
 		$("#menu").append('<div class="menuDot"></div>');
 	};
 	for (var i = 0; i < completed.length; i++) {
-		$(".menuDot").eq(i).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
+		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
-		$(".menuDot").eq(i).on("click",function(event){
+		$(".menuDot").eq(completed[i]-1).on("click",function(event){
 			var which = $(event.target).index()+1;
 			loadAssignment(which);
 		});
@@ -569,32 +576,32 @@ function makeMenu(){
 	}
 }
 
-var assignments = [
-	{
-		"targets" : [1,2,3,4,5,6,7],
-		"clickable":[true,true,true,true,true,true,true],
-		"viz":"scale-full",
-		"id":1,
-		"prompt":"full",
-		"reqFrames":[20,20,20,20,20,20,20],
-		"color": [0,100,50]
-	},
-	{
-		"targets" : [1,2,3,4,5],
-		"clickable":[true,false,false,false,false],
-		"viz":"scale-full",
-		"id":2,
-		"prompt":"tonic",
-		"reqFrames":[40,20,20,20,40],
-		"color": [310,100,50]
-	},
-	{
-		"targets" : [1,3,5],
-		"clickable":[true,true,true,true,false],
-		"viz":"scale-full",
-		"id":3,
-		"prompt":"full",
-		"reqFrames":[20,20,20],
-		"color": [250,100,50]
-	},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
-];
+// var assignments = [
+// 	{
+// 		"targets" : [1,2,3,4,5,6,7],
+// 		"clickable":[true,true,true,true,true,true,true],
+// 		"viz":"scale-full",
+// 		"id":1,
+// 		"prompt":"full",
+// 		"reqFrames":[20,20,20,20,20,20,20],
+// 		"color": [0,100,50]
+// 	},
+// 	{
+// 		"targets" : [1,2,3,4,5],
+// 		"clickable":[true,false,false,false,false],
+// 		"viz":"scale-full",
+// 		"id":2,
+// 		"prompt":"tonic",
+// 		"reqFrames":[40,20,20,20,40],
+// 		"color": [310,100,50]
+// 	},
+// 	{
+// 		"targets" : [1,3,5],
+// 		"clickable":[true,true,true,true,false],
+// 		"viz":"scale-full",
+// 		"id":3,
+// 		"prompt":"full",
+// 		"reqFrames":[20,20,20],
+// 		"color": [250,100,50]
+// 	},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
+// ];
