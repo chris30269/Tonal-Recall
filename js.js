@@ -436,7 +436,7 @@ function loadAssignment(which){
 			perf.attempts[i] = [];
 		};
 
-		var color = "hsl("+options.colors[assignment.targets[0]]+","+100+"%,"+50+"%)";
+		var color = "hsl("+options.colors[assignment.targets[0]-1]+","+100+"%,"+50+"%)";
 		$("#progress").attr("fill", color);
 		$("#progress").css("transform", "scale(0)");
 		$("#ballcircle > path").first().attr("fill", color);
@@ -489,6 +489,10 @@ function demoAss(twe){
 		playNote(options.freqs[0], duration, audioContext.currentTime+delay);
 		window.setTimeout(function(){$("#circle > path").eq(0).attr("stroke", determineColor(1));$("use#use1").attr("xlink:href", "#"+$("#circle > path").eq(0).attr("id"));}, 0);
 		window.setTimeout(function(){$("#circle > path").eq(1).attr("stroke", determineColor(1));$("use#use2").attr("xlink:href", "#"+$("#circle > path").eq(1).attr("id"));}, 0);
+
+		var duration = assignment.reqFrames[0]*detector.options.length/44100;//seconds of tonic
+		window.setTimeout(function(){$("#circle > path").eq(0).attr("stroke", "black");}, 1000*duration);
+		window.setTimeout(function(){$("#circle > path").eq(1).attr("stroke", "black");}, 1000*duration);
 	}
 }
 
@@ -562,7 +566,7 @@ function makeMenu(){
 		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
 		$(".menuDot").eq(completed[i]-1).on("click",function(event){
-			var which = $(event.target).index()+1;
+			var which = $(event.target).index();
 			loadAssignment(which);
 		});
 	};
