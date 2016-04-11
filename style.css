@@ -124,6 +124,12 @@ html{
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
+.spacer{
+	max-width: 28px;
+	max-height: 28px;
+	width: 1vw;
+	height: 1vw;
+}
 .clickable{
 	cursor: pointer;
 }

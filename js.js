@@ -593,7 +593,7 @@ function makeMenu(){
 	$("#menu").html("");
 	var string = '<div class="menuSection"><div id="consent" class="clickable"></div>';
 	for (var i = 0; i < assignments.length; i++) {
-		if(beginnings.indexOf(i+1) > -1) string += '</div><div class="menuSection">';
+		if(beginnings.indexOf(i+1) > -1) string += '</div><div class="menuSection"><div class="spacer"></div></div><div class="menuSection">';
 		string += '<div class="menuDot" data-which="'+(i+1)+'"></div>';
 	};
 	string += '</div>';
