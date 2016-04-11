@@ -20,7 +20,7 @@ html{
 	justify-content: space-around;
 	align-items: center;
 	max-width: 40vw;
-	height: 100vh;
+	min-height: 100vh;
 }
 #middle{
 	flex-grow: 2;
@@ -83,7 +83,7 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: .5vw;
+	margin: .4vw;
 	flex: 0 0 auto;
 }
 .menuSection{
@@ -98,7 +98,7 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: .5vw;
+	margin: .4vw;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
@@ -109,7 +109,7 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: .5vw;
+	margin: .4vw;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
@@ -120,7 +120,7 @@ html{
 	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
-	margin: .5vw;
+	margin: .4vw;
 	flex: 0 0 auto;
 	background-color: hsl(0,100%,50%);
 }
