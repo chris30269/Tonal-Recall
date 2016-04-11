@@ -430,7 +430,7 @@ function makeTonic(){
 function loadAssignment(which){
 	//timbre
 	if(!myInstrument){
-		var instrument = Organ_2;
+		var instrument = Trombone;
 		var real = new Float32Array(instrument.real.length);
 		var imag = new Float32Array(instrument.imag.length);
 		for (var i = 0; i < instrument.real.length; i++) {
