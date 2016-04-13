@@ -64,184 +64,179 @@ $(function(){
 		}
 	}
 
-	try{
-		detector = new PitchDetector({
-		    // Audio Context (Required)
-		    context: audioContext,
+	detector = new PitchDetector({
+	    // Audio Context (Required)
+	    context: audioContext,
 
-		    // Input AudioNode (Required)
-		    //input: null, // default: Microphone input
+	    // Input AudioNode (Required)
+	    //input: null, // default: Microphone input
 
-		    // Output AudioNode (Optional)
-		    //output: AudioNode, // default: no output
+	    // Output AudioNode (Optional)
+	    //output: AudioNode, // default: no output
 
-		    // interpolate frequency (Optional)
-		    //
-		    // Auto-correlation is calculated for different (discrete) signal periods
-		    // The true frequency is often in-beween two periods.
-		    //
-		    // We can interpolate (very hacky) by looking at neighbours of the best 
-		    // auto-correlation period and shifting the frequency a bit towards the
-		    // highest neighbour.
-		    interpolateFrequency: true, // default: true
+	    // interpolate frequency (Optional)
+	    //
+	    // Auto-correlation is calculated for different (discrete) signal periods
+	    // The true frequency is often in-beween two periods.
+	    //
+	    // We can interpolate (very hacky) by looking at neighbours of the best 
+	    // auto-correlation period and shifting the frequency a bit towards the
+	    // highest neighbour.
+	    interpolateFrequency: true, // default: true
 
-		    // Callback on pitch detection (Optional)
-		    onDetect: function(stats, pitchDetector) { 
-		        stats.frequency // 440
-		        stats.detected // --> true
-		        stats.worst_correlation // 0.03 - local minimum, not global minimum!
-		        stats.best_correlation // 0.98
-		        stats.worst_period // 80
-		        stats.best_period // 100
-		        stats.time // 2.2332 - audioContext.currentTime
-		        stats.rms // 0.02 
+	    // Callback on pitch detection (Optional)
+	    onDetect: function(stats, pitchDetector) { 
+	        stats.frequency // 440
+	        stats.detected // --> true
+	        stats.worst_correlation // 0.03 - local minimum, not global minimum!
+	        stats.best_correlation // 0.98
+	        stats.worst_period // 80
+	        stats.best_period // 100
+	        stats.time // 2.2332 - audioContext.currentTime
+	        stats.rms // 0.02 
 
-		        if(stats.detected){
-		        	//var pitch = constrainPitch();
-		        	$("#hz").html(stats.frequency);
-		        	var fraction = Math.log(stats.frequency/options.freqs[0])/Math.log(2)%1;
-		        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
-		        	if(assignment.targets[perf.progress.indexOf(false)] != 1){
-		        		cents = cents + 2400;
-			        	cents = cents%1200;
-			        }
-		        	// var average = 0;
-		        	// for (var i = smoother.length - 1; i >= 0; i--) {
-		        	// 	average += smoother[i];
-		        	// };
-		        	// average = average / (smoother.length*1.0);
-		        	// var smoothed = mode(smoother);
-		        	//console.log(smoothed);
-		        	// if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
-		        	// 	//not an error
-		        		// $("#ballcircle").css("opacity", "1");
-		        		for (var i = smoother.length - 1; i >= 1; i--) {
-		        			smoother[i] = smoother[i-1];
-		        		};
-		        		smoother[0] = cents;
-		        		rotate(mode(smoother), options.temperament);
-		        		// rotate(cents, options.temperament)
-		        		if(assignment && perf.progress.indexOf(false) > -1){
-		        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
-		        			if(cents < options.scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > options.scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
-		        				//console.log("nailed it");
-		        				perf.correctFrames++;
-		        				var max = perf.correctFrames/assignment.reqFrames[perf.progress.indexOf(false)];
-		        				if (max > 1) max = 1;
-		        				$("#progress").css("transform", "scale("+max+")");
-		        			}
-		        			if(perf.correctFrames > assignment.reqFrames[perf.progress.indexOf(false)]){
-		        				//victory!
-		        				//the one just finished
-		        				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
-								var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
-		        				$($("#circle > path").get(piece1-1)).attr("stroke", "black");
-								$($("#circle > path").get(piece2-1)).attr("stroke", "black");
-								$($("#circle > path").get(piece1-1)).removeClass("transparent");
-								$($("#circle > path").get(piece2-1)).removeClass("transparent");
-								$($("#circle > path").get(piece1-1)).addClass("notTransparent");
-								$($("#circle > path").get(piece2-1)).addClass("notTransparent");
-								$($("#circle > path").get(piece1-1)).addClass("transparent");
-								$($("#circle > path").get(piece2-1)).addClass("transparent");
-								$($("#circle > path").get(piece1-1)).removeClass("notTransparent");
-								$($("#circle > path").get(piece2-1)).removeClass("notTransparent");
-								var color = $($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke");
-								$($(".progressDot").get(perf.progress.indexOf(false))).attr("fill", color);
-								$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", "black");
-
-								//moving on
-								var color = determineColor(assignment.targets[perf.progress.indexOf(false)+1]);
-								perf.correctFrames = 0;
-								perf.progress[perf.progress.indexOf(false)] = true;
-		         				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
-								var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
-								$($("#circle > path").get(piece1-1)).removeClass("transparent");
-								$($("#circle > path").get(piece2-1)).removeClass("transparent");
-								$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", color);
-								$("#ballcircle > path").first().attr("fill", color);
-		         				window.setTimeout(function(){if(perf.progress.indexOf(false) != 0) $("#progress").attr("fill", color);}, 100);
-		         				$("#progress").css("transform", "scale(0)");
-		         				$($("#circle > path").get(piece1-1)).attr("fill", color);
-								$($("#circle > path").get(piece2-1)).attr("fill", color);
-								$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("id"));
-								$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("id"));
-								if(perf.progress.indexOf(false) < 0){
-				        			//done with assignment
-									$("#circle > path").attr("fill", "none");
-									$("#circle > path").removeClass("transparent");
-									perf.finished = Math.round(Date.now()/1000);
-									perfs.push(perf);
-									$(".progressDot").attr("stroke", "none");
-									$(".progressDot").attr("fill", "none");
-									//go to new assignment
-				        			if(assignment) loadAssignment(assignment.id+1);
-				        			else loadAssignment(null);
-									
-									//save
-									//start feedback
-									var stringified = JSON.stringify(perfs);
-									$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
-										if(data == "success"){
-											//console.log("saved!");
-											//end feedback
-										}
-										else console.log("something went wrong?");
-										//console.log("data: "+data);
-									});
-								}
-		        			}
-		        		}
-		        		else{
-		        			//maybe nothing?
-		        		}
-
-		        	// }
-		        	// else $("#ballcircle").css("opacity", ".25");
-		        	$("#cents").html(cents);
+	        if(stats.detected){
+	        	//var pitch = constrainPitch();
+	        	$("#hz").html(stats.frequency);
+	        	var fraction = Math.log(stats.frequency/options.freqs[0])/Math.log(2)%1;
+	        	var cents = Math.round(1200*fraction); //rounding to the neared cent (for beter or worse)
+	        	if(assignment.targets[perf.progress.indexOf(false)] != 1){
+	        		cents = cents + 2400;
+		        	cents = cents%1200;
 		        }
-		    },
+	        	// var average = 0;
+	        	// for (var i = smoother.length - 1; i >= 0; i--) {
+	        	// 	average += smoother[i];
+	        	// };
+	        	// average = average / (smoother.length*1.0);
+	        	// var smoothed = mode(smoother);
+	        	//console.log(smoothed);
+	        	// if((cents < smoothed*1.1) || (cents > smoothed*0.9)){
+	        	// 	//not an error
+	        		// $("#ballcircle").css("opacity", "1");
+	        		for (var i = smoother.length - 1; i >= 1; i--) {
+	        			smoother[i] = smoother[i-1];
+	        		};
+	        		smoother[0] = cents;
+	        		rotate(mode(smoother), options.temperament);
+	        		// rotate(cents, options.temperament)
+	        		if(assignment && perf.progress.indexOf(false) > -1){
+	        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
+	        			if(cents < options.scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > options.scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
+	        				//console.log("nailed it");
+	        				perf.correctFrames++;
+	        				var max = perf.correctFrames/assignment.reqFrames[perf.progress.indexOf(false)];
+	        				if (max > 1) max = 1;
+	        				$("#progress").css("transform", "scale("+max+")");
+	        			}
+	        			if(perf.correctFrames > assignment.reqFrames[perf.progress.indexOf(false)]){
+	        				//victory!
+	        				//the one just finished
+	        				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
+							var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
+	        				$($("#circle > path").get(piece1-1)).attr("stroke", "black");
+							$($("#circle > path").get(piece2-1)).attr("stroke", "black");
+							$($("#circle > path").get(piece1-1)).removeClass("transparent");
+							$($("#circle > path").get(piece2-1)).removeClass("transparent");
+							$($("#circle > path").get(piece1-1)).addClass("notTransparent");
+							$($("#circle > path").get(piece2-1)).addClass("notTransparent");
+							$($("#circle > path").get(piece1-1)).addClass("transparent");
+							$($("#circle > path").get(piece2-1)).addClass("transparent");
+							$($("#circle > path").get(piece1-1)).removeClass("notTransparent");
+							$($("#circle > path").get(piece2-1)).removeClass("notTransparent");
+							var color = $($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke");
+							$($(".progressDot").get(perf.progress.indexOf(false))).attr("fill", color);
+							$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", "black");
 
-		    // Debug Callback for visualisation (Optional)
-		    onDebug: function(stats, pitchDetector) { },
+							//moving on
+							var color = determineColor(assignment.targets[perf.progress.indexOf(false)+1]);
+							perf.correctFrames = 0;
+							perf.progress[perf.progress.indexOf(false)] = true;
+	         				var piece1 = (assignment.targets[perf.progress.indexOf(false)]*2)-1;
+							var piece2 = assignment.targets[perf.progress.indexOf(false)]*2;
+							$($("#circle > path").get(piece1-1)).removeClass("transparent");
+							$($("#circle > path").get(piece2-1)).removeClass("transparent");
+							$($(".progressDot").get(perf.progress.indexOf(false))).attr("stroke", color);
+							$("#ballcircle > path").first().attr("fill", color);
+	         				window.setTimeout(function(){if(perf.progress.indexOf(false) != 0) $("#progress").attr("fill", color);}, 100);
+	         				$("#progress").css("transform", "scale(0)");
+	         				$($("#circle > path").get(piece1-1)).attr("fill", color);
+							$($("#circle > path").get(piece2-1)).attr("fill", color);
+							$("use#use1").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-1)).attr("id"));
+							$("use#use2").attr("xlink:href", "#"+$($("#circle > path").get((assignment.targets[perf.progress.indexOf(false)]*2)-2)).attr("id"));
+							if(perf.progress.indexOf(false) < 0){
+			        			//done with assignment
+								$("#circle > path").attr("fill", "none");
+								$("#circle > path").removeClass("transparent");
+								perf.finished = Math.round(Date.now()/1000);
+								perfs.push(perf);
+								$(".progressDot").attr("stroke", "none");
+								$(".progressDot").attr("fill", "none");
+								//go to new assignment
+			        			if(assignment) loadAssignment(assignment.id+1);
+			        			else loadAssignment(null);
+								
+								//save
+								//start feedback
+								var stringified = JSON.stringify(perfs);
+								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
+									if(data == "success"){
+										//console.log("saved!");
+										//end feedback
+									}
+									else console.log("something went wrong?");
+									//console.log("data: "+data);
+								});
+							}
+	        			}
+	        		}
+	        		else{
+	        			//maybe nothing?
+	        		}
 
-		    // Minimal signal strength (RMS, Optional)
-		    minRms: 0.02,
+	        	// }
+	        	// else $("#ballcircle").css("opacity", ".25");
+	        	$("#cents").html(cents);
+	        }
+	    },
 
-		    // Detect pitch only with minimal correlation of: (Optional)
-		    minCorrelation: 0.9,
+	    // Debug Callback for visualisation (Optional)
+	    onDebug: function(stats, pitchDetector) { },
 
-		    // Detect pitch only if correlation increases with at least: (Optional)
-		    //minCorreationIncrease: 0.5,
+	    // Minimal signal strength (RMS, Optional)
+	    minRms: 0.02,
 
-		    // Note: you cannot use minCorrelation and minCorreationIncrease
-		    // at the same time!
+	    // Detect pitch only with minimal correlation of: (Optional)
+	    minCorrelation: 0.9,
 
-		    // Signal Normalization (Optional)
-		    normalize: "rms", // or "peak". default: undefined
+	    // Detect pitch only if correlation increases with at least: (Optional)
+	    //minCorreationIncrease: 0.5,
 
-		    // Only detect pitch once: (Optional)
-		    stopAfterDetection: false,
+	    // Note: you cannot use minCorrelation and minCorreationIncrease
+	    // at the same time!
 
-		    // Buffer length (Optional)
-		    length: 1024, // default 1024
+	    // Signal Normalization (Optional)
+	    normalize: "rms", // or "peak". default: undefined
 
-		    // Limit range (Optional):
-		    //minNote: 69, // by MIDI note number
-		    //maxNote: 80, 
+	    // Only detect pitch once: (Optional)
+	    stopAfterDetection: false,
 
-		    minFrequency: 40,    // by Frequency in Hz
-		    maxFrequency: 1000,
+	    // Buffer length (Optional)
+	    length: 1024, // default 1024
 
-		    minPeriod: 2,  // by period (i.e. actual distance of calculation in audio buffer)
-		    maxPeriod: 512, // --> convert to frequency: frequency = sampleRate / period
+	    // Limit range (Optional):
+	    //minNote: 69, // by MIDI note number
+	    //maxNote: 80, 
 
-		    // Start right away
-		    start: true // default: false
-		});
-	}
-	catch(e){
-		//idk?
-	}
+	    minFrequency: 40,    // by Frequency in Hz
+	    maxFrequency: 1000,
+
+	    minPeriod: 2,  // by period (i.e. actual distance of calculation in audio buffer)
+	    maxPeriod: 512, // --> convert to frequency: frequency = sampleRate / period
+
+	    // Start right away
+	    start: true // default: false
+	});
 	
 
 
@@ -355,6 +350,13 @@ function playNote(which, duration, when){
 	osc2.frequency.value = which;
 	osc2.start(when);
 	osc2.stop(when+duration);
+
+	var osc3 = audioContext.createOscillator();
+	osc3.connect(audioContext.destination);
+	osc3.setPeriodicWave(myInstrument);
+	osc3.frequency.value = which*4;
+	osc3.start(when);
+	osc3.stop(when+duration);
 }
 
 function addEventListeners(){
@@ -413,18 +415,20 @@ function addEventListeners(){
 }
 
 function makeTonic(){
-	var tonic = Math.round(Math.random()*12);
-	if(options.A > 219) options.A = options.A/4;
-	$("#tonic").html(tonic);
-	// freqs[0] = options.A*Math.pow(2, tonic/12);
-	// for (var i = 0; i < freqs.length; i++) {
-	// 	freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
-	// };
-	options.freqs = [];
-	for (var i = 0; i < options.scale.length-1; i++) {
-		options.freqs[i] = options.A*Math.pow(2, ((tonic*100)+options.scale[i])/1200);
-		options.colors[i] = (((tonic*100)+options.scale[i])/1200*360)%360;
-	};
+	if(assignment.tonic == undefined && assignment.tonic != "same"){
+		var tonic = Math.round(Math.random()*12);
+		if(options.A > 219) options.A = options.A/4;
+		$("#tonic").html(tonic);
+		// freqs[0] = options.A*Math.pow(2, tonic/12);
+		// for (var i = 0; i < freqs.length; i++) {
+		// 	freqs[i] = options.A*Math.pow(2, (tonic+i)/12);
+		// };
+		options.freqs = [];
+		for (var i = 0; i < options.scale.length-1; i++) {
+			options.freqs[i] = options.A*Math.pow(2, ((tonic*100)+options.scale[i])/1200);
+			options.colors[i] = (((tonic*100)+options.scale[i])/1200*360)%360;
+		};
+	}
 }
 
 function loadAssignment(which){
@@ -440,9 +444,6 @@ function loadAssignment(which){
 		myInstrument = audioContext.createPeriodicWave(real, imag);
 	}
 
-	//make a new tonic
-	makeTonic();
-
 	$("#circle > path").attr("fill", "none");
 
 	if(!assignAssignmnet(which)){
@@ -453,6 +454,8 @@ function loadAssignment(which){
 		$("#circle > path").attr("stroke", "black");
 	}
 	else{
+		//make a new tonic
+		makeTonic();
 		perf = {
 			"systemOptions":options,
 			"attempts":[],
