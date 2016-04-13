@@ -173,8 +173,8 @@ $(function(){
 								$(".progressDot").attr("stroke", "none");
 								$(".progressDot").attr("fill", "none");
 								//go to new assignment
-			        			if(assignment) loadAssignment(assignment.id+1);
-			        			else loadAssignment(null);
+			        			if(assignment) window.setTimeout(function(){loadAssignment(assignment.id+1);}, 500);
+			        			else window.setTimeout(function(){loadAssignment(null);}, 500);
 								
 								//save
 								//start feedback
