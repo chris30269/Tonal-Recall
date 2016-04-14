@@ -604,7 +604,7 @@ function makeMenu(){
 	$("#menu").append('<div class="menuSection"><div id="survey" class="clickable"></div></div>');
 	$("#menu").append('<div class="menuSection"><div id="stats" class="clickable"></div></div>');
 	for (var i = 0; i < completed.length; i++) {
-		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+(i+1)/assignments.length*360+",100%,50%)").addClass("clickable");
+		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+($(".menuDot").eq(completed[i]-1).data("which"))/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
 		$(".menuDot").eq(completed[i]-1).on("click",function(event){
 			var which = $(event.target).data("which");
