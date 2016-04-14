@@ -31,6 +31,8 @@ $(function(){
 		alert("Looks like you're using a browser I don't support. Sorry about that. Feel free to poke around anyway.");
 	}
 	else{
+		$("#progress").css("transform", "scale(.5)");
+		$("#progress").addClass("loading");
 		//check if user yet
 		user = localStorage.getItem("userId");
 		if(!user){
@@ -60,6 +62,8 @@ $(function(){
 						}
 					};
 				}
+				$("#progress").css("transform", "scale(0)");
+				$("#progress").removeClass("loading");
 			});
 		}
 	}
@@ -172,17 +176,21 @@ $(function(){
 								perfs.push(perf);
 								$(".progressDot").attr("stroke", "none");
 								$(".progressDot").attr("fill", "none");
-								//go to new assignment
-			        			if(assignment) window.setTimeout(function(){loadAssignment(assignment.id+1);}, 500);
-			        			else window.setTimeout(function(){loadAssignment(null);}, 500);
 								
 								//save
 								//start feedback
 								var stringified = JSON.stringify(perfs);
+								$("#progress").css("transform", "scale(.5)");
+								$("#progress").addClass("loading");
 								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
 									if(data == "success"){
-										//console.log("saved!");
-										//end feedback
+										$("#progress").css("transform", "scale(0)");
+										$("#progress").removeClass("loading");
+										//go to new assignment
+										if(assignment) loadAssignment(assignment.id+1);
+					        			else loadAssignment(null);
+					        			// if(assignment) window.setTimeout(function(){loadAssignment(assignment.id+1);}, 200);
+					        			// else window.setTimeout(function(){loadAssignment(null);}, 200);
 									}
 									else console.log("something went wrong?");
 									//console.log("data: "+data);
@@ -447,7 +455,7 @@ function loadAssignment(which){
 	$("#circle > path").attr("fill", "none");
 
 	if(!assignAssignmnet(which)){
-		window.location.href = "survey.html";
+		if(!localStorage.getItem("didSurvey")) window.location.href = "survey.html";
 		//free play
 		$("#ballcircle > path").first().attr("fill", "black");
 		$("#ballcircle > path").first().attr("stroke", "black");

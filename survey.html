@@ -459,7 +459,8 @@
 		var responses = {"questions":temp, "followups":followupsTemp};
 		console.log(JSON.stringify(responses));
 		$.post( "php/survey.php", {"action":"save", "userId":localStorage.getItem("userId"), "responses":JSON.stringify(responses)}, function(data) {
-			console.log(data);
+			// console.log(data);
+			localStorage.setItem("didSurvey", true);
 			window.location.href = "/";
 		});
 	});
