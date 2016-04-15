@@ -184,21 +184,19 @@ $(function(){
 								$("#progress").addClass("loading");
 								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
 									if(data == "success"){
-										
-										
-										window.setTimeout(function(){
-											$("#progress").css("transform", "scale(0)");
-											$("#progress").removeClass("loading");
-											//go to new assignment
-											if(assignment) loadAssignment(assignment.id+1);
-						        			else loadAssignment(null);
-										}, 500);
 					        			// if(assignment) window.setTimeout(function(){loadAssignment(assignment.id+1);}, 200);
 					        			// else window.setTimeout(function(){loadAssignment(null);}, 200);
 									}
 									else console.log("something went wrong?");
 									//console.log("data: "+data);
 								});
+								window.setTimeout(function(){
+									$("#progress").css("transform", "scale(0)");
+									$("#progress").removeClass("loading");
+									//go to new assignment
+									if(assignment) loadAssignment(assignment.id+1);
+				        			else loadAssignment(null);
+								}, 500);
 							}
 	        			}
 	        		}
@@ -440,6 +438,13 @@ function makeTonic(){
 			options.freqs[i] = options.A*Math.pow(2, ((tonic*100)+options.scale[i])/1200);
 			options.colors[i] = (((tonic*100)+options.scale[i])/1200*360)%360;
 		};
+	}
+	else{
+		var tonic = 0;
+		for (var i = 0; i < options.scale.length-1; i++) {
+			options.colors[i] = (((tonic*100)+options.scale[i])/1200*360)%360;
+		};
+		$("#tonic").html(tonic);
 	}
 }
 

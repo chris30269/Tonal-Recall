@@ -430,7 +430,7 @@
 
 		<br>
 		<p>After saving, you will be redirected back to the main page.</p>
-		<p>You can come back here and change you answers anytime.</p>
+		<p>You can come back here and change your answers anytime.</p>
 		<button>Save</button>
 	</div>
 </body>
@@ -472,8 +472,9 @@
 			for (var i = 0; i < survey.questions.length; i++) {
 				var question = Object.keys(survey.questions[i])[0];
 				var answer = survey.questions[i][question];
-				if(question != "question3") $("#"+question+answer).attr("checked", "checked");
+				if(question != "question3" && question != "question17") $("#"+question+answer).attr("checked", "checked");
 				if(question == "question3") $("input[name=question3]").val(answer);
+				if(question == "question17") $("input[name=question17]").val(answer);
 			};
 
 			for(var i = 0; i < survey.followups.length; i++){

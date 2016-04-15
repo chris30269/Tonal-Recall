@@ -218,35 +218,35 @@ var assignments = [
 	{
 		"id":31,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true, true, true, true, true, true, true],
 		"prompt":"full"
 	},
 	{
 		"id":32,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true, true, true, true, true, true, true],
 		"prompt":"full"
 	},
 	{
 		"id":33,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true, true, true, true, true, true, true],
 		"prompt":"full"
 	},
 	{
 		"id":34,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true, true, true, true, true, true, true],
 		"prompt":"full"
 	},
 	{
 		"id":35,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true, true, true, true, true, true, true],
 		"prompt":"full"
 	},
