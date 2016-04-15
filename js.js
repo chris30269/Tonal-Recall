@@ -184,11 +184,15 @@ $(function(){
 								$("#progress").addClass("loading");
 								$.post( "php/save.php", {"userId":user, "perfs":stringified}, function(data) {
 									if(data == "success"){
-										$("#progress").css("transform", "scale(0)");
-										$("#progress").removeClass("loading");
-										//go to new assignment
-										if(assignment) loadAssignment(assignment.id+1);
-					        			else loadAssignment(null);
+										
+										
+										window.setTimeout(function(){
+											$("#progress").css("transform", "scale(0)");
+											$("#progress").removeClass("loading");
+											//go to new assignment
+											if(assignment) loadAssignment(assignment.id+1);
+						        			else loadAssignment(null);
+										}, 500);
 					        			// if(assignment) window.setTimeout(function(){loadAssignment(assignment.id+1);}, 200);
 					        			// else window.setTimeout(function(){loadAssignment(null);}, 200);
 									}
@@ -605,12 +609,12 @@ function makeMenu(){
 	var string = '<div class="menuSection"><div id="consent" class="clickable"></div>';
 	for (var i = 0; i < assignments.length; i++) {
 		if(beginnings.indexOf(i+1) > -1) string += '</div><div class="menuSection"><div class="spacer"></div></div><div class="menuSection">';
-		string += '<div class="menuDot" data-which="'+(i+1)+'"></div>';
+		if(i < 13 || i > 90) string += '<div class="menuDot benchmark" data-which="'+(i+1)+'""></div>';
+		else string += '<div class="menuDot" data-which="'+(i+1)+'""></div>';
 	};
 	string += '</div>';
 	$("#menu").append(string);
 	$("#menu").append('<div class="menuSection"><div id="survey" class="clickable"></div></div>');
-	$("#menu").append('<div class="menuSection"><div id="stats" class="clickable"></div></div>');
 	for (var i = 0; i < completed.length; i++) {
 		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+($(".menuDot").eq(completed[i]-1).data("which"))/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
@@ -639,9 +643,6 @@ function makeMenu(){
 	});
 	$("#survey").on("click", function(){
 			window.location.href = "survey.html";
-	});
-	$("#stats").on("click", function(){
-			window.location.href = "stats.html";
 	});
 }
 
