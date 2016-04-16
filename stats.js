@@ -36,6 +36,8 @@ function timeToTargets(){
 			count++;
 		}
 		var string = "<tr><td>"+allData[i].userId+"</td>";
+		var date = new Date(1000*allData[i].consent);
+		string += "<td>"+date.toString()+"</td>";
 		for (var j = 0; j < allData[i].data.length; j++) {
 			string += "<td>"+allData[i].data[j].assignment+"</td>";
 		};
