@@ -238,7 +238,7 @@ function timeToTarget(){
 							var last = allData[i].data[j].attempts[l][allData[i].data[j].attempts[l].length-1].time;
 							var first = allData[i].data[j].attempts[l][0].time;
 							var dur = last-first;
-							if(dur < 120){
+							if(dur < 30){
 								assignmentTargets[k].targets[l].push(dur);
 							}
 						};
