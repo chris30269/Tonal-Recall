@@ -12,6 +12,7 @@ $(function(){
 		allData = JSON.parse(data);
 		timeToTargets();
 		whenJoined();
+		assignmentsCompleted();
 	});
 });
 
@@ -89,7 +90,7 @@ function whenJoined(){
 	    .orient("left")
 	    .ticks(10, "");
 
-	var svg = d3.select("body").append("svg")
+	var svg = d3.select("#whenJoined").append("svg")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
@@ -125,6 +126,81 @@ function whenJoined(){
 
 	function type(d) {
 	  d.num = +d.num;
+	  return d;
+	}
+}
+
+function assignmentsCompleted(){
+	var completed = [];
+	for (var i = 0; i < assignments.length; i++) {
+		var temp = {"assignment":assignments[i].id, "count":0};
+		completed.push(temp);
+	};
+	for (var i = 0; i < allData.length; i++) {
+		for (var j = 0; j < allData[i].data.length; j++) {
+			completed[allData[i].data[j].assignment-1].count++;
+		};
+	};
+	//console.log(JSON.stringify(completed));
+
+	//
+	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+	    width = (window.innerWidth) - margin.left - margin.right,
+	    height = (window.innerHeight) - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left")
+	    .ticks(10, "");
+
+	var svg = d3.select("#assignmentsCompleted").append("svg")
+	    .attr("width", "100%")
+	    .attr("height", "100%")
+	    .attr('viewBox','0 0 '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom))+' '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom)))
+	    .attr('preserveAspectRatio','xMinYMin')
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var data = completed;
+	x.domain(data.map(function(d) { return d.assignment; }));
+	y.domain([0, d3.max(data, function(d) { return d.count; })]);
+
+	svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	svg.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	  .append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", -24)
+	    .attr("dy", ".71em")
+	    .style("text-anchor", "end")
+	    .text("Completions");
+
+	svg.selectAll(".bar")
+	    .data(data)
+	  .enter().append("rect")
+	    .attr("class", "bar")
+	    .attr("x", function(d) { return x(d.assignment); })
+	    .attr("width", x.rangeBand())
+	    .attr("y", function(d) { return y(d.count); })
+	    .attr("height", function(d) { return height - y(d.count); });
+
+	function type(d) {
+	  d.count = +d.count;
 	  return d;
 	}
 }
