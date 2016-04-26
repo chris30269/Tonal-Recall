@@ -248,7 +248,7 @@ $(function(){
 	    start: true // default: false
 	});
 	
-
+	$("#ballcircle").css("transform", "rotate(30deg)");
 
 });
 
@@ -611,15 +611,19 @@ function makeMenu(){
 		if(highestCompleted < completed[i]) highestCompleted = completed[i];
 	};
 	$("#menu").html("");
-	var string = '<div class="menuSection"><div id="consent" class="clickable"></div>';
+	var string = '<div class="menuSection"><h1><a href="consent.html">Consent and Instructions</a></h1></div>';
 	for (var i = 0; i < assignments.length; i++) {
-		if(beginnings.indexOf(i+1) > -1) string += '</div><div class="menuSection"><div class="spacer"></div></div><div class="menuSection">';
-		if(i < 13 || i > 90) string += '<div class="menuDot benchmark" data-which="'+(i+1)+'""></div>';
+		if(beginnings.indexOf(i+1) > -1){
+			if(i+1 == 1 || i+1 == beginnings[7]) string += '</div><div class="menuSection"><h1>Benchmark</h1></div><div class="menuSection">';
+			else if(i+1 == beginnings[1]) string += '</div><div class="menuSection"><h1>Activities</h1></div><div class="menuSection">';
+			else string += '</div><div class="menuSection"><div class="spacer"></div></div><div class="menuSection">';
+		}
+		if(i < beginnings[1]-1 || i > 90) string += '<div class="menuDot benchmark" data-which="'+(i+1)+'""></div>';
 		else string += '<div class="menuDot" data-which="'+(i+1)+'""></div>';
 	};
 	string += '</div>';
 	$("#menu").append(string);
-	$("#menu").append('<div class="menuSection"><div id="survey" class="clickable"></div></div>');
+	$("#menu").append('<div class="menuSection"><h1><a href="survey.html">Survey</a></h1></div></div>');
 	for (var i = 0; i < completed.length; i++) {
 		$(".menuDot").eq(completed[i]-1).css("background-color", "hsl( "+($(".menuDot").eq(completed[i]-1).data("which"))/assignments.length*360+",100%,50%)").addClass("clickable");
 		// $(".menuDot").eq(i).on("click", {"which":i}, loadAss);
@@ -643,12 +647,12 @@ function makeMenu(){
 			loadAssignment(highestCompleted+1);
 		});
 	}
-	$("#consent").on("click", function(){
-			window.location.href = "consent.html";
-	});
-	$("#survey").on("click", function(){
-			window.location.href = "survey.html";
-	});
+	// $("#consent").on("click", function(){
+	// 		window.location.href = "consent.html";
+	// });
+	// $("#survey").on("click", function(){
+	// 		window.location.href = "survey.html";
+	// });
 }
 
 // var assignments = [

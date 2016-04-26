@@ -5,6 +5,10 @@ body{
 html{
 	background-color: grey;
 }
+h1{
+	text-decoration: underline;
+	font-size: 1.2vw;
+}
 #container{
 	display: flex;
 	align-items: center;
@@ -56,12 +60,6 @@ html{
 	width: 70%;
 }
 
-.pie{
-	/*position: absolute;
-	top: 0;
-	height: 90vh;
-	min-width: 50vw;*/
-}
 #progress{
 	transform-origin: 50% 50%;
 	transition: transform 100ms;
@@ -87,15 +85,14 @@ html{
 	flex: 0 0 auto;
 }
 .benchmark{
-	max-width: 45px;
-	max-height: 45px;
-	width: 1.8vw;
-	height: 1.8vw;
+	max-width: 56px;
+	max-height: 56px;
+	width: 2vw;
+	height: 2vw;
 	box-sizing: border-box;
 	border: 2px solid black;
 	margin: .4vw;
 	flex: 0 0 auto;
-	transform: rotate(45deg);
 	border-radius: 0px;
 }
 .menuSection{
@@ -103,28 +100,7 @@ html{
 	display: flex;
 	flex-wrap: wrap;
 }
-#survey{
-	max-width: 56px;
-	max-height: 56px;
-	width: 2vw;
-	height: 2vw;
-	box-sizing: border-box;
-	border: 2px solid black;
-	margin: .4vw;
-	flex: 0 0 auto;
-	background-color: hsl(0,100%,50%);
-}
-#consent{
-	max-width: 56px;
-	max-height: 56px;
-	width: 2vw;
-	height: 2vw;
-	box-sizing: border-box;
-	border: 2px solid black;
-	margin: .4vw;
-	flex: 0 0 auto;
-	background-color: hsl(0,100%,50%);
-}
+
 #stats{
 	max-width: 56px;
 	max-height: 56px;
@@ -137,10 +113,10 @@ html{
 	background-color: hsl(0,100%,50%);
 }
 .spacer{
-	max-width: 28px;
-	max-height: 28px;
-	width: 1vw;
-	height: 1vw;
+	max-width: 14px;
+	max-height: 14px;
+	width: .5vw;
+	height: .5vw;
 }
 .clickable{
 	cursor: pointer;
