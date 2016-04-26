@@ -247,8 +247,6 @@ $(function(){
 	    // Start right away
 	    start: true // default: false
 	});
-	
-	$("#ballcircle").css("transform", "rotate(30deg)");
 
 });
 
@@ -618,7 +616,7 @@ function makeMenu(){
 			else if(i+1 == beginnings[1]) string += '</div><div class="menuSection"><h1>Activities</h1></div><div class="menuSection">';
 			else string += '</div><div class="menuSection"><div class="spacer"></div></div><div class="menuSection">';
 		}
-		if(i < beginnings[1]-1 || i > 90) string += '<div class="menuDot benchmark" data-which="'+(i+1)+'""></div>';
+		if(i < beginnings[1]-1 || i > 90) string += '<div class="menuDot" data-which="'+(i+1)+'""></div>';
 		else string += '<div class="menuDot" data-which="'+(i+1)+'""></div>';
 	};
 	string += '</div>';
