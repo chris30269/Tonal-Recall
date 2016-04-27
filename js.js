@@ -162,11 +162,8 @@ $(function(){
 				//figure out where they are
 				var temp = [];
 				if(data == "new" || data == ""){
+					loadAssignment(1);
 					tour.start();
-					
-					tour.on("complete", function(){
-						loadAssignment(1);
-					});
 				}
 				else{
 					perfs = JSON.parse(data);
