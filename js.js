@@ -28,124 +28,125 @@ var options = {
 var tour;
 
 $(function(){
+	//get the tour ready
+	tour = new Shepherd.Tour({
+		defaults: {
+			classes: 'shepherd-theme-dark',
+			scrollTo: false
+		}
+	});
+	tour.addStep('step1', {
+		title : "The Ball",
+		text: 'The colored ball represents the note you\'re currently singing.',
+		attachTo: '#ballcircle bottom',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step2', {
+		title : "Your Current Target",
+		text: 'Use your voice to get the ball in the hole.',
+		attachTo: '#one_out top',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step3', {
+		title : "Hold the Note",
+		text: 'Find the note, and hold it until the bubble fills this area.',
+		attachTo: '#progress bottom',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step4', {
+		title : "To Help You Along",
+		text: 'At the beginning, you\'ll hear the exercise before you do it. You\'ll also be able to click to hear the note again. But as you get better, there will be less help available.',
+		attachTo: '#one_in bottom',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step4', {
+		title : "Notes in the Activity",
+		text: 'The number of bubbles here shows you how many notes are in this activity.',
+		attachTo: '#bar bottom',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step4', {
+		text: 'See how many activities there are, repeat an activity, read the consent form, or take the survey.',
+		attachTo: '#menu right',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Got it!',
+				action: tour.complete
+			}
+		]
+	});
+	tour.on("cancel", function(){
+		demoAss(assignment.prompt);
+	});
+	tour.on("complete", function(){
+		demoAss(assignment.prompt);
+	});
+
 	//check if they have technology
 	if(!audioContext || !(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia)){
 		alert("Looks like you're using a browser I don't support. Sorry about that. Feel free to poke around anyway.");
+		tour.start();
 	}
 	else{
 		//standing by
 		$("#progress").css("transform", "scale(.5)");
 		$("#progress").addClass("loading");
-
-		//get the tour ready
-		tour = new Shepherd.Tour({
-			defaults: {
-				classes: 'shepherd-theme-dark',
-				scrollTo: false
-			}
-		});
-		tour.addStep('step1', {
-			title : "The Ball",
-			text: 'The colored ball represents the note you\'re currently singing.',
-			attachTo: '#ballcircle bottom',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Cancel',
-					classes: 'shepherd-button-secondary',
-					action: tour.cancel
-				},
-				{
-					text: 'Next',
-					action: tour.next
-				}
-			]
-		});
-		tour.addStep('step2', {
-			title : "Your Current Target",
-			text: 'Use your voice to get the ball in the hole.',
-			attachTo: '#one_out top',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Cancel',
-					classes: 'shepherd-button-secondary',
-					action: tour.cancel
-				},
-				{
-					text: 'Next',
-					action: tour.next
-				}
-			]
-		});
-		tour.addStep('step3', {
-			title : "Hold the Note",
-			text: 'Find the note, and hold it until the bubble fills this area.',
-			attachTo: '#progress bottom',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Cancel',
-					classes: 'shepherd-button-secondary',
-					action: tour.cancel
-				},
-				{
-					text: 'Next',
-					action: tour.next
-				}
-			]
-		});
-		tour.addStep('step4', {
-			title : "To Help You Along",
-			text: 'At the beginning, you\'ll hear the exercise before you do it. You\'ll also be able to click to hear the note again. But as you get better, there will be less help available.',
-			attachTo: '#one_in bottom',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Cancel',
-					classes: 'shepherd-button-secondary',
-					action: tour.cancel
-				},
-				{
-					text: 'Next',
-					action: tour.next
-				}
-			]
-		});
-		tour.addStep('step4', {
-			title : "Notes in the Activity",
-			text: 'The number of bubbles here shows you how many notes are in this activity.',
-			attachTo: '#bar bottom',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Cancel',
-					classes: 'shepherd-button-secondary',
-					action: tour.cancel
-				},
-				{
-					text: 'Next',
-					action: tour.next
-				}
-			]
-		});
-		tour.addStep('step4', {
-			text: 'See how many activities there are, repeat an activity, read the consent form, or take the survey.',
-			attachTo: '#menu right',
-			classes: 'shepherd-theme-dark',
-			buttons: [
-				{
-					text: 'Got it!',
-					action: tour.complete
-				}
-			]
-		});
-		tour.on("cancel", function(){
-			demoAss(assignment.prompt);
-		});
-		tour.on("complete", function(){
-			demoAss(assignment.prompt);
-		});
 
 		//check if user yet
 		user = localStorage.getItem("userId");
