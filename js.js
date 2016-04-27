@@ -88,7 +88,7 @@ $(function(){
 	});
 	tour.addStep('step4', {
 		title : "To Help You Along",
-		text: 'At the beginning, you\'ll hear the exercise before you do it. You\'ll also be able to click to hear the note again. But as you get better, there will be less help available.',
+		text: 'During the activities, you\'ll hear the exercise before you do it. You\'ll also be able to click to hear the note again. But as you get better, there will be less help available.',
 		attachTo: '#one_in bottom',
 		classes: 'shepherd-theme-dark',
 		buttons: [
@@ -103,7 +103,7 @@ $(function(){
 			}
 		]
 	});
-	tour.addStep('step4', {
+	tour.addStep('step5', {
 		title : "Notes in the Activity",
 		text: 'The number of bubbles here shows you how many notes are in this activity.',
 		attachTo: '#bar bottom',
@@ -120,9 +120,25 @@ $(function(){
 			}
 		]
 	});
-	tour.addStep('step4', {
+	tour.addStep('step6', {
 		text: 'See how many activities there are, repeat an activity, read the consent form, or take the survey.',
 		attachTo: '#menu right',
+		classes: 'shepherd-theme-dark',
+		buttons: [
+			{
+				text: 'Cancel',
+				classes: 'shepherd-button-secondary',
+				action: tour.cancel
+			},
+			{
+				text: 'Next',
+				action: tour.next
+			}
+		]
+	});
+	tour.addStep('step7', {
+		text: 'Click here to access this tour at any time.',
+		attachTo: '#help right',
 		classes: 'shepherd-theme-dark',
 		buttons: [
 			{

@@ -15,6 +15,7 @@ $(function(){
 		assignmentsCompleted();
 		timeToAssignment();
 		timeToTarget();
+		totalError();
 	});
 });
 
@@ -257,7 +258,7 @@ function timeToTarget(){
 		};
 	};
 
-	console.log(assignmentTargets);
+	// console.log(assignmentTargets);
 
 	var allTargets = [];
 	for (var i = 0; i < assignmentTargets.length; i++) {
@@ -424,4 +425,116 @@ function timeToAssignment(){
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.time); })
 	    .attr("height", function(d) { return height - y(d.time); });
+}
+
+function totalError(){
+	var allTargets = [];
+	var targetCounter = 0;
+	//make a spot for each target
+	for (var i = 0; i < assignments.length; i++) {
+		for (var j = 0; j < assignments[i].targets.length; j++) {
+			var temp = {"target":targetCounter, "error":[]};
+			allTargets.push(temp);
+			targetCounter++;
+		};
+	};
+
+	for (var i = 0; i < allData.length; i++) {
+		//for each real user
+		if(allData[i].userId > lastDevUser){
+			targetCounter = 0;
+			for (var j = 0; j < allData[i].data.length; j++) {
+				//for each completed assignment
+				for (var k = 0; k < assignments.length; k++) {
+					if(assignments[k].id == allData[i].data[j].assignment){
+						//found that assignment
+						for (var l = 0; l < assignments[k].targets.length; l++) {
+							//for each target in that assignment
+							var shouldBe = allData[i].data[j].systemOptions.scale[assignments[k].targets[l]-1];
+							// console.log("should be: "+shouldBe);
+							var cumError = 0;
+							for (var m = 0; m < allData[i].data[j].attempts.length; m++) {
+								for (var n = 0; n < allData[i].data[j].attempts[m].length; n++) {
+									cumError += Math.abs(allData[i].data[j].attempts[m][n].cents - shouldBe);
+								};
+							};
+							for (var m = 0; m < allTargets.length; m++) {
+								if(allTargets[m].target == targetCounter){
+									if(cumError < 2000000) allTargets[m].error.push(cumError);
+								}
+							};
+							targetCounter++;
+						};
+					}
+				};
+			};
+		}
+	};
+	for (var i = 0; i < allTargets.length; i++) {
+		var entries = allTargets[i].error.length;
+		var total = 0;
+		for (var j = 0; j < allTargets[i].error.length; j++) {
+			total += allTargets[i].error[j];
+		};
+		if(entries == 0) allTargets[i].error = 0;
+		else allTargets[i].error = Math.round(total/entries);
+	};
+
+	// console.log(JSON.stringify(allTargets));
+
+	//
+	var margin = {top: 20, right: 20, bottom: 30, left: 60},
+	    width = (window.innerWidth) - margin.left - margin.right,
+	    height = (window.innerHeight) - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left")
+	    .ticks(10, "");
+
+	var svg = d3.select("#totalError").append("svg")
+	    .attr("width", "100%")
+	    .attr("height", "100%")
+	    .attr('viewBox','0 0 '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom))+' '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom)))
+	    .attr('preserveAspectRatio','xMinYMin')
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var data = allTargets;
+	x.domain(data.map(function(d) { return d.target; }));
+	y.domain([0, d3.max(data, function(d) { return d.error; })]);
+
+	svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	svg.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	  .append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", -24)
+	    .attr("dy", ".71em")
+	    .style("text-anchor", "end")
+	    .text("Total error");
+
+	svg.selectAll(".bar")
+	    .data(data)
+	  .enter().append("rect")
+	    .attr("class", "bar")
+	    .attr("x", function(d) { return x(d.target); })
+	    .attr("width", x.rangeBand())
+	    .attr("y", function(d) { return y(d.error); })
+	    .attr("height", function(d) { return height - y(d.error); });
 }
