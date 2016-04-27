@@ -101,7 +101,7 @@ h1{
 	flex-wrap: wrap;
 }
 
-#stats{
+#help{
 	max-width: 56px;
 	max-height: 56px;
 	width: 2vw;
@@ -109,8 +109,14 @@ h1{
 	box-sizing: border-box;
 	border: 2px solid black;
 	margin: .4vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	flex: 0 0 auto;
-	background-color: hsl(0,100%,50%);
+	background-color: lightgrey;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
 }
 .spacer{
 	max-width: 14px;

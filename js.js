@@ -25,14 +25,128 @@ var options = {
 		"colors":[0,10,20,30,40,50,60]
 	}; //click to hear which notes?
 
+var tour;
+
 $(function(){
 	//check if they have technology
 	if(!audioContext || !(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia)){
 		alert("Looks like you're using a browser I don't support. Sorry about that. Feel free to poke around anyway.");
 	}
 	else{
+		//standing by
 		$("#progress").css("transform", "scale(.5)");
 		$("#progress").addClass("loading");
+
+		//get the tour ready
+		tour = new Shepherd.Tour({
+			defaults: {
+				classes: 'shepherd-theme-dark',
+				scrollTo: false
+			}
+		});
+		tour.addStep('step1', {
+			title : "The Ball",
+			text: 'The colored ball represents the note you\'re currently singing.',
+			attachTo: '#ballcircle bottom',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Cancel',
+					classes: 'shepherd-button-secondary',
+					action: tour.cancel
+				},
+				{
+					text: 'Next',
+					action: tour.next
+				}
+			]
+		});
+		tour.addStep('step2', {
+			title : "Your Current Target",
+			text: 'Use your voice to get the ball in the hole.',
+			attachTo: '#one_out top',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Cancel',
+					classes: 'shepherd-button-secondary',
+					action: tour.cancel
+				},
+				{
+					text: 'Next',
+					action: tour.next
+				}
+			]
+		});
+		tour.addStep('step3', {
+			title : "Hold the Note",
+			text: 'Find the note, and hold it until the bubble fills this area.',
+			attachTo: '#progress bottom',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Cancel',
+					classes: 'shepherd-button-secondary',
+					action: tour.cancel
+				},
+				{
+					text: 'Next',
+					action: tour.next
+				}
+			]
+		});
+		tour.addStep('step4', {
+			title : "To Help You Along",
+			text: 'At the beginning, you\'ll hear the exercise before you do it. You\'ll also be able to click to hear the note again. But as you get better, there will be less help available.',
+			attachTo: '#one_in bottom',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Cancel',
+					classes: 'shepherd-button-secondary',
+					action: tour.cancel
+				},
+				{
+					text: 'Next',
+					action: tour.next
+				}
+			]
+		});
+		tour.addStep('step4', {
+			title : "Notes in the Activity",
+			text: 'The number of bubbles here shows you how many notes are in this activity.',
+			attachTo: '#bar bottom',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Cancel',
+					classes: 'shepherd-button-secondary',
+					action: tour.cancel
+				},
+				{
+					text: 'Next',
+					action: tour.next
+				}
+			]
+		});
+		tour.addStep('step4', {
+			text: 'See how many activities there are, repeat an activity, read the consent form, or take the survey.',
+			attachTo: '#menu right',
+			classes: 'shepherd-theme-dark',
+			buttons: [
+				{
+					text: 'Got it!',
+					action: tour.complete
+				}
+			]
+		});
+		tour.on("cancel", function(){
+			demoAss(assignment.prompt);
+		});
+		tour.on("complete", function(){
+			demoAss(assignment.prompt);
+		});
+
 		//check if user yet
 		user = localStorage.getItem("userId");
 		if(!user){
@@ -47,7 +161,11 @@ $(function(){
 				//figure out where they are
 				var temp = [];
 				if(data == "new" || data == ""){
-					loadAssignment(1);
+					tour.start();
+					
+					tour.on("complete", function(){
+						loadAssignment(1);
+					});
 				}
 				else{
 					perfs = JSON.parse(data);
@@ -609,7 +727,7 @@ function makeMenu(){
 		if(highestCompleted < completed[i]) highestCompleted = completed[i];
 	};
 	$("#menu").html("");
-	var string = '<div class="menuSection"><h1><a href="consent.html">Consent and Instructions</a></h1></div>';
+	var string = '<div class="menuSection"><div id="help"><span>?</span></div></div><div class="menuSection"><h1><a href="consent.html">Consent and Instructions</a></h1></div>';
 	for (var i = 0; i < assignments.length; i++) {
 		if(beginnings.indexOf(i+1) > -1){
 			if(i+1 == 1 || i+1 == beginnings[7]) string += '</div><div class="menuSection"><h1>Benchmark</h1></div><div class="menuSection">';
@@ -645,6 +763,9 @@ function makeMenu(){
 			loadAssignment(highestCompleted+1);
 		});
 	}
+	$("#help").on("click", function(){
+		tour.start();
+	});
 	// $("#consent").on("click", function(){
 	// 		window.location.href = "consent.html";
 	// });
