@@ -9,6 +9,7 @@ var lastDevUser = 24;
 
 $(function(){
 	$.post( "php/stats.php", function(data) {
+		// console.log(data);
 		allData = JSON.parse(data);
 		people();
 		whenJoined();
