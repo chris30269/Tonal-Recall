@@ -387,7 +387,7 @@ function timeToAssignment(){
 	};
 
 
-	console.log(JSON.stringify(assignmentTargets));
+	// console.log(JSON.stringify(assignmentTargets));
 	//
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
 	    width = (window.innerWidth) - margin.left - margin.right,
@@ -461,7 +461,7 @@ function timeToAssignment(){
 			})
 			.attr("stroke-width", 1)
 			.attr("stroke", "black")
-			.attr("class","sdLines");;
+			.attr("class","sdLines");
 }
 
 function totalError(){
@@ -470,7 +470,7 @@ function totalError(){
 	//make a spot for each target
 	for (var i = 0; i < assignments.length; i++) {
 		for (var j = 0; j < assignments[i].targets.length; j++) {
-			var temp = {"target":targetCounter, "error":[], "assignment":assignments[i].id};
+			var temp = {"target":targetCounter, "error":[], "assignment":assignments[i].id, "sd":0};
 			allTargets.push(temp);
 			targetCounter++;
 		};
@@ -513,11 +513,19 @@ function totalError(){
 		for (var j = 0; j < allTargets[i].error.length; j++) {
 			total += allTargets[i].error[j];
 		};
-		if(entries == 0) allTargets[i].error = 0;
-		else allTargets[i].error = Math.round(total/entries);
+		allTargets[i].sd = allTargets[i].error;
+		if(entries == 0){
+			allTargets[i].error = 0;
+			allTargets[i].sd = 0;
+		}
+		else if(entries == 1) allTargets[i].sd = 0;
+		else{
+			allTargets[i].sd = d3.deviation(allTargets[i].sd);
+			allTargets[i].error = Math.round(total/entries);
+		}
 	};
 
-	// console.log(JSON.stringify(allTargets));
+	console.log(JSON.stringify(allTargets));
 
 	//
 	var margin = {top: 20, right: 20, bottom: 30, left: 60},
@@ -577,4 +585,20 @@ function totalError(){
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.error); })
 	    .attr("height", function(d) { return height - y(d.error); });
+
+	svg.selectAll(".sdLines")
+		.data(data).enter().append("line")
+			.attr("x1", function(d) { return x(d.target)+Math.floor(x.rangeBand()/2); })
+			.attr("y1", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.error-(d.sd/2));
+			})
+			.attr("x2", function(d) { return x(d.target)+Math.floor(x.rangeBand()/2); })
+			.attr("y2", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.error+(d.sd/2));
+			})
+			.attr("stroke-width", 1)
+			.attr("stroke", "black")
+			.attr("class","sdLines");
 }

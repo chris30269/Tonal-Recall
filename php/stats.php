@@ -12,7 +12,7 @@ if($link){
 		//print_r($row);
 		$temp = $temp.'{"userId":'.$row["userId"];
 
-		if($row["data"] == "new") $temp = $temp.', "data":""';
+		if($row["data"] == "new" || $row["data"] == "") $temp = $temp.', "data":""';
 		else $temp = $temp.', "data":'.$row["data"];
 
 		if($row["survey"] == "") $temp = $temp.', "survey":""';
