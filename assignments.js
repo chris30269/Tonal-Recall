@@ -373,35 +373,35 @@ var assignments = [
 	{
 		"id":53,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"full"
 	},
 	{
 		"id":54,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"full"
 	},
 	{
 		"id":55,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"full"
 	},
 	{
 		"id":56,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"full"
 	},
 	{
 		"id":57,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"full"
 	},
@@ -528,35 +528,35 @@ var assignments = [
 	{
 		"id":75,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"tonic"
 	},
 	{
 		"id":76,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"tonic"
 	},
 	{
 		"id":77,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"tonic"
 	},
 	{
 		"id":78,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"tonic"
 	},
 	{
 		"id":79,
 		"targets" : [1,2,3,4,5,6,7,1],
-		"reqFrames":[20,20,20,20,20,20,20],
+		"reqFrames":[20,20,20,20,20,20,20,20],
 		"clickable":[true],
 		"prompt":"tonic"
 	},
