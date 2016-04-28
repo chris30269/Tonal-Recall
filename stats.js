@@ -279,7 +279,7 @@ function timeToTarget(){
 
 	// console.log(JSON.stringify(allTargets));
 	//
-	var margin = {top: 20, right: 20, bottom: 30, left: 60},
+	var margin = {top: 20, right: 20, bottom: 30, left: 40},
 	    width = (window.innerWidth) - margin.left - margin.right,
 	    height = (window.innerHeight) - margin.top - margin.bottom;
 
@@ -323,7 +323,7 @@ function timeToTarget(){
 	    .attr("y", -24)
 	    .attr("dy", ".71em")
 	    .style("text-anchor", "end")
-	    .text("Time to target");
+	    .text("Completions");
 
 	svg.selectAll(".bar")
 	    .data(data)
@@ -336,12 +336,19 @@ function timeToTarget(){
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.time); })
 	    .attr("height", function(d) { return height - y(d.time); });
+
+	function type(d) {
+	  d.time = +d.time;
+	  return d;
+	}
 }
 
 function timeToAssignment(){
+	//seconds
+	//this is not gonna be quite right because of the tour :(
 	var assignmentTargets = [];
 	for (var i = 0; i < assignments.length; i++) {
-		var temp = {"assignment":assignments[i].id, "time":[]};
+		var temp = {"assignment":assignments[i].id, "time":[], "sd":0};
 		assignmentTargets.push(temp);
 	};
 	
@@ -364,19 +371,25 @@ function timeToAssignment(){
 	};
 	for (var i = 0; i < assignmentTargets.length; i++) {
 		var total = 0;
-		if(assignmentTargets[i].time.length == 0) assignmentTargets[i].time = 0;
+		if(assignmentTargets[i].time.length == 0){
+			assignmentTargets[i].time = 0;
+			assignmentTargets[i].sd = 0;
+		}
+		else if(assignmentTargets[i].time.length == 1) assignmentTargets[i].sd = 0;
 		else{
 			for (var j = 0; j < assignmentTargets[i].time.length; j++) {
 				total+=assignmentTargets[i].time[j];
 			};
+			// console.log(d3.deviation(assignmentTargets[i].time));
+			assignmentTargets[i].sd = d3.deviation(assignmentTargets[i].time);
 			assignmentTargets[i].time = total/assignmentTargets[i].time.length;
 		}
 	};
 
 
-	// console.log(JSON.stringify(assignmentTargets));
+	console.log(JSON.stringify(assignmentTargets));
 	//
-	var margin = {top: 20, right: 20, bottom: 30, left: 60},
+	var margin = {top: 20, right: 20, bottom: 30, left: 40},
 	    width = (window.innerWidth) - margin.left - margin.right,
 	    height = (window.innerHeight) - margin.top - margin.bottom;
 
@@ -433,6 +446,22 @@ function timeToAssignment(){
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.time); })
 	    .attr("height", function(d) { return height - y(d.time); });
+
+	svg.selectAll(".sdLines")
+		.data(data).enter().append("line")
+			.attr("x1", function(d) { return x(d.assignment)+Math.floor(x.rangeBand()/2); })
+			.attr("y1", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.time-(d.sd/2));
+			})
+			.attr("x2", function(d) { return x(d.assignment)+Math.floor(x.rangeBand()/2); })
+			.attr("y2", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.time+(d.sd/2));
+			})
+			.attr("stroke-width", 1)
+			.attr("stroke", "black")
+			.attr("class","sdLines");;
 }
 
 function totalError(){
