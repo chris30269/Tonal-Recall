@@ -13,6 +13,7 @@ var user;
 var animationDelay = 0.1; //seconds between demo notes
 //[0,50,100,150,200,250,300, 350]
 //[0,200,400,500,700,900,1100, 1200] //major
+var listening = true;
 
 var smoother = [0,0,0,0,0,0,0,0,0,0];
 
@@ -258,7 +259,7 @@ $(function(){
 	        		// rotate(cents, options.temperament)
 	        		if(assignment && perf.progress.indexOf(false) > -1){
 	        			perf.attempts[perf.progress.indexOf(false)].push({"cents":cents, "time":audioContext.currentTime});
-	        			if(cents < options.scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > options.scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack){
+	        			if(cents < options.scale[assignment.targets[perf.progress.indexOf(false)]-1]+slack && cents > options.scale[assignment.targets[perf.progress.indexOf(false)]-1]-slack && listening){
 	        				//console.log("nailed it");
 	        				perf.correctFrames++;
 	        				var max = perf.correctFrames/assignment.reqFrames[perf.progress.indexOf(false)];
@@ -437,6 +438,7 @@ function mode(array){
 }
 
 function playNote(which, duration, when){
+	listening = false;
 	if (!duration) duration = 0.5;
 	if(!when) when = audioContext.currentTime;
 	// var osc = audioContext.createOscillator();
@@ -497,6 +499,10 @@ function playNote(which, duration, when){
 	osc3.frequency.value = which*4;
 	osc3.start(when);
 	osc3.stop(when+duration);
+
+	osc.onended = function(){
+		listening = true;
+	}
 }
 
 function addEventListeners(){
