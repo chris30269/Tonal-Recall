@@ -213,136 +213,6 @@ function assignmentsCompleted(){
 	}
 }
 
-function timeToTarget(){
-	var assignmentTargets = [];
-	for (var i = 0; i < assignments.length; i++) {
-		var temp = {"assignment":assignments[i].id, "targets":[]};
-		assignmentTargets.push(temp);
-	};
-	for (var i = 0; i < assignments.length; i++) {
-		for (var j = 0; j < assignments[i].targets.length; j++) {
-			assignmentTargets[i].targets.push([]);
-		};
-	};
-
-	for (var i = 0; i < allData.length; i++) {
-		if(allData[i].userId > lastDevUser){
-			for (var j = 0; j < allData[i].data.length; j++) {
-				//find the assignment (maybe more direct access via array)
-				for (var k = 0; k < assignmentTargets.length; k++) {
-					if(assignmentTargets[k].assignment == allData[i].data[j].assignment){
-						//found the assignment
-						//cross your fingers shit lines up right
-						for (var l = 0; l < allData[i].data[j].attempts.length; l++) {
-							// for (var m = 0; m < allData[i].data[j].attempts[l].length; m++) {
-							// 	allData[i].data[j].attempts[l][m]
-							// };
-							var last = allData[i].data[j].attempts[l][allData[i].data[j].attempts[l].length-1].time;
-							var first = allData[i].data[j].attempts[l][0].time;
-							var dur = last-first;
-							if(dur < 30){
-								assignmentTargets[k].targets[l].push(dur);
-							}
-						};
-					}
-				};
-			};
-		}
-	};
-	for (var i = 0; i < assignmentTargets.length; i++) {
-		for (var j = 0; j < assignmentTargets[i].targets.length; j++) {
-			var total = 0;
-			for (var k = 0; k < assignmentTargets[i].targets[j].length; k++) {
-				total += assignmentTargets[i].targets[j][k];
-			};
-			assignmentTargets[i].targets[j] = total/assignmentTargets[i].targets[j].length;
-		};
-	};
-
-	// console.log(assignmentTargets);
-
-	var allTargets = [];
-	var counter = 0;
-	for (var i = 0; i < assignmentTargets.length; i++) {
-		for (var j = 0; j < assignmentTargets[i].targets.length; j++) {
-			if(assignmentTargets[i].targets[j] >-1){
-				var temp = {"time":Math.round(1000*assignmentTargets[i].targets[j]), "which":counter+1, "assignment":assignmentTargets[i].assignment};
-				allTargets.push(temp);
-			}
-			else{
-				var temp = {"time":0, "which":counter+1, "assignment":assignmentTargets[i].assignment};
-				allTargets.push(temp);
-			}
-			counter++;
-		};
-	};
-
-	// console.log(JSON.stringify(allTargets));
-	//
-	var margin = {top: 20, right: 20, bottom: 30, left: 40},
-	    width = (window.innerWidth) - margin.left - margin.right,
-	    height = (window.innerHeight) - margin.top - margin.bottom;
-
-	var x = d3.scale.ordinal()
-	    .rangeRoundBands([0, width], .1);
-
-	var y = d3.scale.linear()
-	    .range([height, 0]);
-
-	var xAxis = d3.svg.axis()
-	    .scale(x)
-	    .orient("bottom");
-
-	var yAxis = d3.svg.axis()
-	    .scale(y)
-	    .orient("left")
-	    .ticks(10, "");
-
-	var svg = d3.select("#timeToTarget").append("svg")
-	    .attr("width", "100%")
-	    .attr("height", "100%")
-	    .attr('viewBox','0 0 '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom))+' '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom)))
-	    .attr('preserveAspectRatio','xMinYMin')
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	var data = allTargets;
-	x.domain(data.map(function(d) { return d.which; }));
-	y.domain([0, d3.max(data, function(d) { return d.time; })]);
-
-	svg.append("g")
-	    .attr("class", "x axis")
-	    .attr("transform", "translate(0," + height + ")")
-	    .call(xAxis);
-
-	svg.append("g")
-	    .attr("class", "y axis")
-	    .call(yAxis)
-	  .append("text")
-	    .attr("transform", "rotate(-90)")
-	    .attr("y", -24)
-	    .attr("dy", ".71em")
-	    .style("text-anchor", "end")
-	    .text("Completions");
-
-	svg.selectAll(".bar")
-	    .data(data)
-	  .enter().append("rect")
-	    .attr("class", "bar")
-	    .attr("fill", function(d){
-	    	return "hsl("+((d.assignment-1)%12)*30+", 100%, 50%)";
-	    })
-	    .attr("x", function(d) { return x(d.which); })
-	    .attr("width", x.rangeBand())
-	    .attr("y", function(d) { return y(d.time); })
-	    .attr("height", function(d) { return height - y(d.time); });
-
-	function type(d) {
-	  d.time = +d.time;
-	  return d;
-	}
-}
-
 function timeToAssignment(){
 	//seconds
 	//this is not gonna be quite right because of the tour :(
@@ -464,6 +334,156 @@ function timeToAssignment(){
 			.attr("class","sdLines");
 }
 
+function timeToTarget(){
+	var assignmentTargets = [];
+	for (var i = 0; i < assignments.length; i++) {
+		var temp = {"assignment":assignments[i].id, "targets":[], "sds":[]};
+		assignmentTargets.push(temp);
+	};
+	for (var i = 0; i < assignments.length; i++) {
+		for (var j = 0; j < assignments[i].targets.length; j++) {
+			assignmentTargets[i].targets.push([]);
+			assignmentTargets[i].sds.push([]);
+		};
+	};
+
+	for (var i = 0; i < allData.length; i++) {
+		if(allData[i].userId > lastDevUser){
+			for (var j = 0; j < allData[i].data.length; j++) {
+				//find the assignment (maybe more direct access via array)
+				for (var k = 0; k < assignmentTargets.length; k++) {
+					if(assignmentTargets[k].assignment == allData[i].data[j].assignment){
+						//found the assignment
+						//cross your fingers shit lines up right
+						for (var l = 0; l < allData[i].data[j].attempts.length; l++) {
+							// for (var m = 0; m < allData[i].data[j].attempts[l].length; m++) {
+							// 	allData[i].data[j].attempts[l][m]
+							// };
+							var last = allData[i].data[j].attempts[l][allData[i].data[j].attempts[l].length-1].time;
+							var first = allData[i].data[j].attempts[l][0].time;
+							var dur = last-first;
+							if(dur < 30){
+								assignmentTargets[k].targets[l].push(dur);
+								assignmentTargets[k].sds[l].push(dur);
+							}
+						};
+					}
+				};
+			};
+		}
+	};
+	for (var i = 0; i < assignmentTargets.length; i++) {
+		for (var j = 0; j < assignmentTargets[i].targets.length; j++) {
+			var total = 0;
+			for (var k = 0; k < assignmentTargets[i].targets[j].length; k++) {
+				total += assignmentTargets[i].targets[j][k];
+			};
+			if(assignmentTargets[i].sds[j].length>1) assignmentTargets[i].sds[j] = d3.deviation(assignmentTargets[i].targets[j]);
+			else assignmentTargets[i].sds[j] = 0;
+			assignmentTargets[i].targets[j] = total/assignmentTargets[i].targets[j].length;
+		};
+	};
+
+	// console.log(JSON.stringify(assignmentTargets));
+
+	var allTargets = [];
+	var counter = 0;
+	for (var i = 0; i < assignmentTargets.length; i++) {
+		for (var j = 0; j < assignmentTargets[i].targets.length; j++) {
+			if(assignmentTargets[i].targets[j] >-1){
+				var temp = {"time":assignmentTargets[i].targets[j], "which":counter+1, "sd":assignmentTargets[i].sds[j], "assignment":assignmentTargets[i].assignment};
+				allTargets.push(temp);
+			}
+			else{
+				var temp = {"time":0, "which":counter+1, "assignment":assignmentTargets[i].assignment, "sd":0};
+				allTargets.push(temp);
+			}
+			counter++;
+		};
+	};
+
+	// console.log(JSON.stringify(allTargets));
+	//
+	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+	    width = (window.innerWidth) - margin.left - margin.right,
+	    height = (window.innerHeight) - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left")
+	    .ticks(10, "");
+
+	var svg = d3.select("#timeToTarget").append("svg")
+	    .attr("width", "100%")
+	    .attr("height", "100%")
+	    .attr('viewBox','0 0 '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom))+' '+Math.min((width+margin.left+margin.right),(height+margin.top+margin.bottom)))
+	    .attr('preserveAspectRatio','xMinYMin')
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var data = allTargets;
+	x.domain(data.map(function(d) { return d.which; }));
+	y.domain([0, d3.max(data, function(d) { return d.time; })]);
+
+	svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	svg.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	  .append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", -24)
+	    .attr("dy", ".71em")
+	    .style("text-anchor", "end")
+	    .text("Completions");
+
+	svg.selectAll(".bar")
+	    .data(data)
+	  .enter().append("rect")
+	    .attr("class", "bar")
+	    .attr("fill", function(d){
+	    	return "hsl("+((d.assignment-1)%12)*30+", 100%, 50%)";
+	    })
+	    .attr("x", function(d) { return x(d.which); })
+	    .attr("width", x.rangeBand())
+	    .attr("y", function(d) { return y(d.time); })
+	    .attr("height", function(d) { return height - y(d.time); });
+
+	svg.selectAll(".sdLines")
+		.data(data).enter().append("line")
+			.attr("x1", function(d) { return x(d.which)+Math.floor(x.rangeBand()/2); })
+			.attr("y1", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.time-(d.sd/2));
+			})
+			.attr("x2", function(d) { return x(d.which)+Math.floor(x.rangeBand()/2); })
+			.attr("y2", function(d) {
+				if(d.sd == 0) return 0;
+				else return y(d.time+(d.sd/2));
+			})
+			.attr("stroke-width", 1)
+			.attr("stroke", "black")
+			.attr("class","sdLines");
+
+	function type(d) {
+	  d.time = +d.time;
+	  return d;
+	}
+}
+
 function totalError(){
 	var allTargets = [];
 	var targetCounter = 0;
@@ -525,7 +545,7 @@ function totalError(){
 		}
 	};
 
-	console.log(JSON.stringify(allTargets));
+	// console.log(JSON.stringify(allTargets));
 
 	//
 	var margin = {top: 20, right: 20, bottom: 30, left: 60},
