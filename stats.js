@@ -261,21 +261,22 @@ function timeToTarget(){
 	// console.log(assignmentTargets);
 
 	var allTargets = [];
+	var counter = 0;
 	for (var i = 0; i < assignmentTargets.length; i++) {
 		for (var j = 0; j < assignmentTargets[i].targets.length; j++) {
 			if(assignmentTargets[i].targets[j] >-1){
-				allTargets.push(Math.round(1000*assignmentTargets[i].targets[j]));
+				var temp = {"time":Math.round(1000*assignmentTargets[i].targets[j]), "which":counter+1, "assignment":assignmentTargets[i].assignment};
+				allTargets.push(temp);
 			}
-			else allTargets.push(0);
+			else{
+				var temp = {"time":0, "which":counter+1, "assignment":assignmentTargets[i].assignment};
+				allTargets.push(temp);
+			}
+			counter++;
 		};
 	};
-	var allTargetsData = [];
-	for (var i = 0; i < allTargets.length; i++) {
-		var temp = {"time":allTargets[i], "which":i+1};
-		allTargetsData.push(temp);
-	};
 
-	// console.log(JSON.stringify(allTargetsData));
+	// console.log(JSON.stringify(allTargets));
 	//
 	var margin = {top: 20, right: 20, bottom: 30, left: 60},
 	    width = (window.innerWidth) - margin.left - margin.right,
@@ -304,7 +305,7 @@ function timeToTarget(){
 	  .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var data = allTargetsData;
+	var data = allTargets;
 	x.domain(data.map(function(d) { return d.which; }));
 	y.domain([0, d3.max(data, function(d) { return d.time; })]);
 
@@ -327,6 +328,9 @@ function timeToTarget(){
 	    .data(data)
 	  .enter().append("rect")
 	    .attr("class", "bar")
+	    .attr("fill", function(d){
+	    	return "hsl("+((d.assignment-1)%12)*30+", 100%, 50%)";
+	    })
 	    .attr("x", function(d) { return x(d.which); })
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.time); })
@@ -421,6 +425,9 @@ function timeToAssignment(){
 	    .data(data)
 	  .enter().append("rect")
 	    .attr("class", "bar")
+	    .attr("fill", function(d){
+	    	return "hsl("+((d.assignment-1)%12)*30+", 100%, 50%)";
+	    })
 	    .attr("x", function(d) { return x(d.assignment); })
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.time); })
@@ -433,7 +440,7 @@ function totalError(){
 	//make a spot for each target
 	for (var i = 0; i < assignments.length; i++) {
 		for (var j = 0; j < assignments[i].targets.length; j++) {
-			var temp = {"target":targetCounter, "error":[]};
+			var temp = {"target":targetCounter, "error":[], "assignment":assignments[i].id};
 			allTargets.push(temp);
 			targetCounter++;
 		};
@@ -532,7 +539,10 @@ function totalError(){
 	svg.selectAll(".bar")
 	    .data(data)
 	  .enter().append("rect")
-	    .attr("class", "bar")
+	  	.attr("class", "bar")
+	    .attr("fill", function(d){
+	    	return "hsl("+((d.assignment-1)%12)*30+", 100%, 50%)";
+	    })
 	    .attr("x", function(d) { return x(d.target); })
 	    .attr("width", x.rangeBand())
 	    .attr("y", function(d) { return y(d.error); })
