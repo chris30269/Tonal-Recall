@@ -565,6 +565,7 @@ function totalError(){
 		else if(entries == 1) allTargets[i].sd = 0;
 		else{
 			allTargets[i].sd = d3.deviation(allTargets[i].sd);
+			allTargets[i].error = 0;
 			allTargets[i].error = Math.round(total/entries);
 		}
 	};
@@ -601,7 +602,7 @@ function totalError(){
 
 	var data = allTargets;
 	x.domain(data.map(function(d) { return d.target; }));
-	y.domain([0, d3.max(data, function(d) { return d.error[0]; })]);
+	y.domain([0, d3.max(data, function(d) { return d.error; })]);
 
 	svg.append("g")
 	    .attr("class", "x axis")
@@ -627,20 +628,20 @@ function totalError(){
 	    })
 	    .attr("x", function(d) { return x(d.target); })
 	    .attr("width", x.rangeBand())
-	    .attr("y", function(d) { return y(d.error[0]); })
-	    .attr("height", function(d) { return height - y(d.error[0]); });
+	    .attr("y", function(d) { return y(d.error); })
+	    .attr("height", function(d) { return height - y(d.error); });
 
 	svg.selectAll(".sdLines")
 		.data(data).enter().append("line")
 			.attr("x1", function(d) { return x(d.target)+Math.floor(x.rangeBand()/2); })
 			.attr("y1", function(d) {
 				if(d.sd == 0) return 0;
-				else return y(d.error[0]-(d.sd/2));
+				else return y(d.error-(d.sd/2));
 			})
 			.attr("x2", function(d) { return x(d.target)+Math.floor(x.rangeBand()/2); })
 			.attr("y2", function(d) {
 				if(d.sd == 0) return 0;
-				else return y(d.error[0]+(d.sd/2));
+				else return y(d.error+(d.sd/2));
 			})
 			.attr("stroke-width", 1)
 			.attr("stroke", "black")
