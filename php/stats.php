@@ -5,7 +5,7 @@ $temp="[";
 
 if($link){
 	$userId = $_POST["userId"];
-	$sql = "SELECT `userId`, `data`, `survey`, `joined`, `consent` FROM `userData`";
+	$sql = "SELECT * FROM `userData`";
 	$result = mysqli_query($link, $sql);
 	while ($row = mysqli_fetch_assoc($result)){
 		//echo $row;

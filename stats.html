@@ -3,6 +3,8 @@
 	<title>Tonal Recall Stats</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="likert.js"></script>
+	<script src="allData.js"></script>
 
 	<script src="assignments.js"></script>
 	<script src="stats.js"></script>
@@ -14,6 +16,20 @@
 		body{
 			background-color: darkgrey;
 		}
+		.likert{
+			width: 100%;
+			height: 52px;
+		}
+		.response{
+			background-color: darkgrey;
+			height: 50px;
+			width: 50px;
+			border: 1px solid black;
+		}
+
+		.hover{fill: #eee !important; cursor: pointer !important;}
+		.no-hover{fill: #fff;}
+		div.tooltip { position: absolute; text-align: left; width: 150px; min-height: 30px; padding: 1em; background: #efefef; border: 1px solid #dbdbdb; border-radius: 5px; pointer-events: none; color: #000; }
 	</style>
 </head>
 <body>
@@ -34,6 +50,9 @@
 	</div>
 	<div id="totalError">
 		<h1>Total error per target</h1>
+	</div>
+	<div id="surveyResults">
+		<h1>Survey Results</h1>
 	</div>
 </body>
 </html>

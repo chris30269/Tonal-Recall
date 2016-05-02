@@ -1,5 +1,9 @@
 var allData;
 var lastDevUser = 24;
+var surveys;
+var likertData;
+var userId = null;
+var allDataPerm;
 
 //time to do each assignment
 
@@ -10,14 +14,19 @@ var lastDevUser = 24;
 $(function(){
 	$.post( "php/stats.php", function(data) {
 		// console.log(data);
+		// console.log("loaded all data");
 		allData = JSON.parse(data);
 		people();
 		whenJoined();
-		assignmentsCompleted();
-		timeToAssignment();
-		timeToTarget();
-		totalError();
+		// console.log(userId);
 	});
+	// people();
+	// whenJoined();
+	// assignmentsCompleted();
+	// timeToAssignment();
+	// timeToTarget();
+	// totalError();
+	// survey();
 });
 
 function people(){
@@ -38,7 +47,7 @@ function people(){
 	// };
 	var count = 0;
 	for (var i = 0; i < allData.length; i++) {
-		if(allData[i].data != "" && allData[i] != "new" && allData[i].userId > 24){
+		if(allData[i].data != "" && allData[i] != "new" && allData[i].userId > lastDevUser){
 			count++;
 		}
 		var string = "<tr><td>"+allData[i].userId+"</td>";
@@ -134,6 +143,20 @@ function whenJoined(){
 	  d.num = +d.num;
 	  return d;
 	}
+
+	//lol callback
+	if(window.location.href.indexOf("?userId")){
+		userId = window.location.href.substr(window.location.href.indexOf("?userId")+8);
+		allDataPerm = allData;
+		for (var i = 0; i < allData.length; i++) {
+			if(allData[i].userId == userId) allData = [allData[i]];
+		};
+	}
+	assignmentsCompleted();
+	timeToAssignment();
+	timeToTarget();
+	totalError();
+	survey();
 }
 
 function assignmentsCompleted(){
@@ -621,4 +644,383 @@ function totalError(){
 			.attr("stroke-width", 1)
 			.attr("stroke", "black")
 			.attr("class","sdLines");
+}
+
+function survey(){
+	//maybe a scatterplot of number of assignments completed vs response?
+	var q1 = [];
+	var q2 = [];
+	var q3 = [];
+	var q4 = [];
+	var q5 = [];
+	var q6 = [];
+	var q7 = [];
+	var q8 = [];
+	var q9 = [];
+	var q10 = [];
+	var q11= [];
+	var q12 = [];
+	var q13 = [];
+	var q14 = [];
+	var q15 = [];
+	var q16 = [];
+
+	surveys = [];
+	for (var i = 0; i < allData.length; i++) {
+		if(allData[i].survey != "" && allData[i].survey != undefined && allData[i].userId > lastDevUser) surveys.push(allData[i].survey);
+	};
+	// console.log(surveys);
+	likertData = [
+        {
+        	"name": "I already had a good sense of tonality, before using this system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I think my sense of tonality is better after using the system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I would like to continue using this system to better my musicianship.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I feel more confident in my sense of tonality after using the system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "This system directly complements my musical goals.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I think that I would like to use this system frequently.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I found the system unnecessarily complex.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I thought the system was easy to use.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I think that I would need the support of a technical person to be able to use this system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I found the various functions in this system were well integrated.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I thought there was too much inconsistency in this system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I would imagine that most people would learn to use this system very quickly.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I found the system very cumbersome to use.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I felt very confident using the system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        },
+        {
+        	"name": "I needed to learn a lot of things before I could get going with this system.",
+            "rating": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0,
+                "6": 0,
+                "7": 0
+            },
+            "followups":[],
+            "avg":[]
+        }
+    ];
+    for (var i = 0; i < surveys.length; i++) {
+    	for (var j = 0; j < surveys[i].questions.length; j++) {
+    		if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question1") && surveys[i].questions[j].question1 != ""){
+    			likertData[0].rating[surveys[i].questions[j].question1]++;
+    			likertData[0].avg.push(1.0*surveys[i].questions[j].question1);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question2") && surveys[i].questions[j].question2 != ""){
+    			likertData[1].rating[surveys[i].questions[j].question2]++;
+    			likertData[1].avg.push(1.0*surveys[i].questions[j].question2);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question3") && surveys[i].questions[j].question3 != ""){
+    			q3.push(surveys[i].questions[j].question3);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question4") && surveys[i].questions[j].question4 != ""){
+    			likertData[2].rating[surveys[i].questions[j].question4]++;
+    			likertData[2].avg.push(1.0*surveys[i].questions[j].question4);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question5") && surveys[i].questions[j].question5 != ""){
+    			likertData[3].rating[surveys[i].questions[j].question5]++;
+    			likertData[3].avg.push(1.0*surveys[i].questions[j].question5);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question6") && surveys[i].questions[j].question6 != ""){
+    			likertData[4].rating[surveys[i].questions[j].question6]++;
+    			likertData[4].avg.push(1.0*surveys[i].questions[j].question6);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question7") && surveys[i].questions[j].question7 != ""){
+    			likertData[5].rating[surveys[i].questions[j].question7]++;
+    			likertData[5].avg.push(1.0*surveys[i].questions[j].question7);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question8") && surveys[i].questions[j].question8 != ""){
+    			likertData[6].rating[surveys[i].questions[j].question8]++;
+    			likertData[6].avg.push(1.0*surveys[i].questions[j].question8);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question9") && surveys[i].questions[j].question9 != ""){
+    			likertData[7].rating[surveys[i].questions[j].question9]++;
+    			likertData[7].avg.push(1.0*surveys[i].questions[j].question9);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question10") && surveys[i].questions[j].question10 != ""){
+    			likertData[8].rating[surveys[i].questions[j].question10]++;
+    			likertData[8].avg.push(1.0*surveys[i].questions[j].question10);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question11") && surveys[i].questions[j].question11 != ""){
+    			likertData[9].rating[surveys[i].questions[j].question11]++;
+    			likertData[9].avg.push(1.0*surveys[i].questions[j].question11);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question12") && surveys[i].questions[j].question12 != ""){
+    			likertData[10].rating[surveys[i].questions[j].question12]++;
+    			likertData[10].avg.push(1.0*surveys[i].questions[j].question12);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question13") && surveys[i].questions[j].question13 != ""){
+    			likertData[11].rating[surveys[i].questions[j].question13]++;
+    			likertData[11].avg.push(1.0*surveys[i].questions[j].question13);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question14") && surveys[i].questions[j].question14 != ""){
+    			likertData[12].rating[surveys[i].questions[j].question14]++;
+    			likertData[12].avg.push(1.0*surveys[i].questions[j].question14);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question15") && surveys[i].questions[j].question15 != ""){
+    			likertData[13].rating[surveys[i].questions[j].question15]++;
+    			likertData[13].avg.push(1.0*surveys[i].questions[j].question15);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question16") && surveys[i].questions[j].question16 != ""){
+    			likertData[14].rating[surveys[i].questions[j].question16]++;
+    			likertData[14].avg.push(1.0*surveys[i].questions[j].question16);
+	    	}
+	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question17") && surveys[i].questions[j].question17 != ""){
+    			$("#surveyResults").append("<p>"+surveys[i].questions[j].question17+"</p>");
+	    	}
+	    	// console.log("processed a survey");
+    	};
+    	for (var j = 0; j < surveys[i].followups.length; j++) {
+    		if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup1") && surveys[i].followups[j].followup1 != ""){
+    			likertData[0].followups.push(surveys[i].followups[j].followup1);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup2") && surveys[i].followups[j].followup2 != ""){
+    			likertData[1].followups.push(surveys[i].followups[j].followup2);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup4") && surveys[i].followups[j].followup4 != ""){
+    			likertData[2].followups.push(surveys[i].followups[j].followup4);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup5") && surveys[i].followups[j].followup5 != ""){
+    			likertData[3].followups.push(surveys[i].followups[j].followup5);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup6") && surveys[i].followups[j].followup6 != ""){
+    			likertData[4].followups.push(surveys[i].followups[j].followup6);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup7") && surveys[i].followups[j].followup7 != ""){
+    			likertData[5].followups.push(surveys[i].followups[j].followup7);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup8") && surveys[i].followups[j].followup8 != ""){
+    			likertData[6].followups.push(surveys[i].followups[j].followup8);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup9") && surveys[i].followups[j].followup9 != ""){
+    			likertData[7].followups.push(surveys[i].followups[j].followup9);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup10") && surveys[i].followups[j].followup10 != ""){
+    			likertData[8].followups.push(surveys[i].followups[j].followup10);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup11") && surveys[i].followups[j].followup11 != ""){
+    			likertData[9].followups.push(surveys[i].followups[j].followup11);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup12") && surveys[i].followups[j].followup12 != ""){
+    			likertData[10].followups.push(surveys[i].followups[j].followup12);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup13") && surveys[i].followups[j].followup13 != ""){
+    			likertData[11].followups.push(surveys[i].followups[j].followup13);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup14") && surveys[i].followups[j].followup14 != ""){
+    			likertData[12].followups.push(surveys[i].followups[j].followup14);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup15") && surveys[i].followups[j].followup15 != ""){
+    			likertData[13].followups.push(surveys[i].followups[j].followup15);
+	    	}
+	    	if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup16") && surveys[i].followups[j].followup16 != ""){
+    			likertData[14].followups.push(surveys[i].followups[j].followup16);
+	    	}
+    	};
+	};
+	d3Likert('#surveyResults', likertData, {height: 740, width: $('#surveyResults').width() });
+	// console.log(q3);
+	var avg = 0;
+	for (var i = 0; i < q3.length; i++) {
+		//$('#surveyResults').append("<p>"+q3[i]+"%</p>");
+		avg+=1.0*q3[i];
+	};
+	var n = q3.length;
+	avg = avg/q3.length;
+	var string = "";
+	string += "<table><tr><td>I think my sense of tonality got better by the following percentage</td><td>"+Math.round(avg*100)/100+"%</td><td>n="+n+"</td></tr>";
+
+	for (var i = 0; i < likertData.length; i++) {
+		avg = 0;
+		for (var j = 0; j < likertData[i].avg.length; j++) {
+		 	avg += 1.0*likertData[i].avg[j];
+		};
+		n = likertData[i].avg.length;
+		likertData[i].avg = avg/likertData[i].avg.length;
+		string += "<tr><td>"+likertData[i].name+"</td><td>"+Math.round(likertData[i].avg*100)/100+"</td><td>n="+n+"</td></tr>";
+	};
+	string += "</table>";
+	$('#surveyResults').append(string);
 }
