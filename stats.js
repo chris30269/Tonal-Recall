@@ -884,7 +884,10 @@ function survey(){
             "avg":[]
         }
     ];
+    var sus = [];
     for (var i = 0; i < surveys.length; i++) {
+    	var temp = 0;
+    	var answered = 0;
     	for (var j = 0; j < surveys[i].questions.length; j++) {
     		if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question1") && surveys[i].questions[j].question1 != ""){
     			likertData[0].rating[surveys[i].questions[j].question1]++;
@@ -912,48 +915,72 @@ function survey(){
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question7") && surveys[i].questions[j].question7 != ""){
     			likertData[5].rating[surveys[i].questions[j].question7]++;
     			likertData[5].avg.push(1.0*surveys[i].questions[j].question7);
+    			temp += (surveys[i].questions[j].question7*1)-1;
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question8") && surveys[i].questions[j].question8 != ""){
     			likertData[6].rating[surveys[i].questions[j].question8]++;
     			likertData[6].avg.push(1.0*surveys[i].questions[j].question8);
+    			temp += (7-(surveys[i].questions[j].question8*1));
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question9") && surveys[i].questions[j].question9 != ""){
     			likertData[7].rating[surveys[i].questions[j].question9]++;
     			likertData[7].avg.push(1.0*surveys[i].questions[j].question9);
+    			temp += (surveys[i].questions[j].question9*1)-1;
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question10") && surveys[i].questions[j].question10 != ""){
     			likertData[8].rating[surveys[i].questions[j].question10]++;
     			likertData[8].avg.push(1.0*surveys[i].questions[j].question10);
+    			temp += (7-(surveys[i].questions[j].question10*1));
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question11") && surveys[i].questions[j].question11 != ""){
     			likertData[9].rating[surveys[i].questions[j].question11]++;
     			likertData[9].avg.push(1.0*surveys[i].questions[j].question11);
+    			temp += (surveys[i].questions[j].question11*1)-1;
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question12") && surveys[i].questions[j].question12 != ""){
     			likertData[10].rating[surveys[i].questions[j].question12]++;
     			likertData[10].avg.push(1.0*surveys[i].questions[j].question12);
+    			temp += (7-(surveys[i].questions[j].question12*1));
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question13") && surveys[i].questions[j].question13 != ""){
     			likertData[11].rating[surveys[i].questions[j].question13]++;
     			likertData[11].avg.push(1.0*surveys[i].questions[j].question13);
+    			temp += (surveys[i].questions[j].question13*1)-1;
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question14") && surveys[i].questions[j].question14 != ""){
     			likertData[12].rating[surveys[i].questions[j].question14]++;
     			likertData[12].avg.push(1.0*surveys[i].questions[j].question14);
+    			temp += (7-(surveys[i].questions[j].question14*1));
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question15") && surveys[i].questions[j].question15 != ""){
     			likertData[13].rating[surveys[i].questions[j].question15]++;
     			likertData[13].avg.push(1.0*surveys[i].questions[j].question15);
+    			temp += (surveys[i].questions[j].question15*1)-1;
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question16") && surveys[i].questions[j].question16 != ""){
     			likertData[14].rating[surveys[i].questions[j].question16]++;
     			likertData[14].avg.push(1.0*surveys[i].questions[j].question16);
+    			temp += (7-(surveys[i].questions[j].question16*1));
+    			answered++;
 	    	}
 	    	if(surveys[i].questions[j] && surveys[i].questions[j].hasOwnProperty("question17") && surveys[i].questions[j].question17 != ""){
     			$("#surveyResults").append("<p>"+surveys[i].questions[j].question17+"</p>");
 	    	}
 	    	// console.log("processed a survey");
     	};
+    	if(temp){
+    		// console.log(temp/(answered*6));
+	    	sus.push(Math.round(100*temp/(answered*6)));
+    	}
     	for (var j = 0; j < surveys[i].followups.length; j++) {
     		if(surveys[i].followups[j] && surveys[i].followups[j].hasOwnProperty("followup1") && surveys[i].followups[j].followup1 != ""){
     			likertData[0].followups.push(surveys[i].followups[j].followup1);
@@ -1003,7 +1030,7 @@ function survey(){
     	};
 	};
 	d3Likert('#surveyResults', likertData, {height: 740, width: $('#surveyResults').width() });
-	// console.log(q3);
+	// console.log(sus);
 	var avg = 0;
 	for (var i = 0; i < q3.length; i++) {
 		//$('#surveyResults').append("<p>"+q3[i]+"%</p>");
@@ -1023,6 +1050,37 @@ function survey(){
 		likertData[i].avg = avg/likertData[i].avg.length;
 		string += "<tr><td>"+likertData[i].name+"</td><td>"+Math.round(likertData[i].avg*100)/100+"</td><td>n="+n+"</td></tr>";
 	};
+
+	var score = 0;
+	// for (var i = 5; i < likertData.length; i++) {
+	// 	if(i%2 == 1){
+	// 		// score += (likertData[i].rating["2"]);
+	// 		// score += (likertData[i].rating["3"]*2);
+	// 		// score += (likertData[i].rating["4"]*3);
+	// 		// score += (likertData[i].rating["5"]*4);
+	// 		// score += (likertData[i].rating["6"]*5);
+	// 		// score += (likertData[i].rating["7"]*6);
+	// 		score += (likertData[i].avg/7)*6;
+	// 	}
+	// 	else{
+	// 		//inverted score
+	// 		// score += (likertData[i].rating["1"]*6);
+	// 		// score += (likertData[i].rating["2"]*5);
+	// 		// score += (likertData[i].rating["3"]*4);
+	// 		// score += (likertData[i].rating["4"]*3);
+	// 		// score += (likertData[i].rating["5"]*2);
+	// 		// score += (likertData[i].rating["6"]);
+	// 		score += ((7-likertData[i].avg)/7)*6;
+	// 	}
+	// };
+	// console.log(score);
+	// score = Math.round(100*score/60.0);
+	var temp = 0;
+	for (var i = 0; i < sus.length; i++) {
+		temp += sus[i];
+	};
+	score = Math.round(temp/sus.length);
+	string += "<tr><td>Average SUS score:</td><td>"+score+"</td><td></td></tr>"
 	string += "</table>";
 	$('#surveyResults').append(string);
 }
