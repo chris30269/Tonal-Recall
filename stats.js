@@ -631,6 +631,45 @@ function totalError(){
 	    .attr("y", function(d) { return y(d.error); })
 	    .attr("height", function(d) { return height - y(d.error); });
 
+	// get the x and y values for least squares
+	var xSeries = data.map(function(d) { return parseFloat(d.target); });
+	var ySeries = data.map(function(d) { return parseFloat(d.error); });
+	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+	console.log(leastSquaresCoeff);
+	// apply the reults of the least squares regression
+	var x1 = xSeries[0];
+	var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
+	var x2 = xSeries[xSeries.length - 1];
+	var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+	var trendData = [[x1,y1,x2,y2]];
+	console.log(trendData);
+	var trendline = svg.selectAll(".trendline")
+		.data(trendData);
+	trendline.enter()
+	.append("line")
+		.attr("class", "trendline")
+		.attr("x1", function(d) { return x(d[0]); })
+		.attr("y1", function(d) { return y(d[1]); })
+		.attr("x2", function(d) { return x(d[2]); })
+		.attr("y2", function(d) { return y(d[3]); })
+		.attr("stroke", "black")
+		.attr("stroke-width", 1);
+
+	// display equation on the chart
+	svg.append("text")
+		.text("eq: " + (leastSquaresCoeff[0]) + "x + " + 
+	(leastSquaresCoeff[1]))
+		.attr("class", "text-label")
+		.attr("x", function(d) {return x(x2) - 300;})
+		.attr("y", function(d) {return y(y2) - 150;});
+
+	// display r-square on the chart
+	svg.append("text")
+		.text("r-sq: " + (leastSquaresCoeff[2]))
+		.attr("class", "text-label")
+		.attr("x", function(d) {return x(x2) - 300;})
+		.attr("y", function(d) {return y(y2) - 130;});
+
 	svg.selectAll(".sdLines")
 		.data(data).enter().append("line")
 			.attr("x1", function(d) { return x(d.target)+Math.floor(x.rangeBand()/2); })
@@ -1083,4 +1122,27 @@ function survey(){
 	string += "<tr><td>Average SUS score:</td><td>"+score+"</td><td></td></tr>"
 	string += "</table>";
 	$('#surveyResults').append(string);
+}
+
+// returns slope, intercept and r-square of the line
+function leastSquares(xSeries, ySeries) {
+	var reduceSumFunc = function(prev, cur) { return prev + cur; };
+
+	var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
+	var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+
+	var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+		.reduce(reduceSumFunc);
+
+	var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+		.reduce(reduceSumFunc);
+
+	var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+		.reduce(reduceSumFunc);
+
+	var slope = ssXY / ssXX;
+	var intercept = yBar - (xBar * slope);
+	var rSquare = Math.pow(ssXY, 2) / (ssXX * ssYY);
+
+	return [slope, intercept, rSquare];
 }
